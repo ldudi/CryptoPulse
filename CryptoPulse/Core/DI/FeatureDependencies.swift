@@ -1,0 +1,42 @@
+//
+//  FeatureDependencies.swift
+//  CryptoPulse
+//
+//  Created by Labhesh Dudi on 15/07/26.
+//
+//
+//import Foundation
+//
+//  FeatureDependencies.swift
+//
+
+import Foundation
+
+struct FeatureDependencies {
+
+    // MARK: - Core
+
+    let appDependencies: AppDependencies
+
+    // MARK: - Configuration
+
+    var configuration: AppConfiguration {
+        appDependencies.configuration
+    }
+
+    // MARK: - Logging
+
+    var logger: AppLogger {
+        appDependencies.logger
+    }
+
+    // MARK: - Repositories
+    // (Sprint 3+)
+
+    // var coinRepository: CoinRepository
+
+    // MARK: - Services
+    // (Sprint 3+)
+
+    // var apiClient: APIClient
+}

@@ -1,5 +1,19 @@
 # Sprint 1: Project Genesis
 
+
+## Success Criteria
+
+At the end of Sprint 1, the application should:
+
+Compile successfully
+Launch to a placeholder Home screen
+Support dependency injection
+Have a modular folder structure
+Be connected to GitHub
+Pass CI
+Contain no feature-specific business logic
+Be ready for Sprint 2
+
 ## Objective
 
 Establish a scalable engineering foundation.
