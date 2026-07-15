@@ -45,9 +45,9 @@
 			path = CryptoPulseUITests;
 			sourceTree = "<group>";
 		};
-		654548F630078059005BB222 /* PRD */ = {
+		654548F630078059005BB222 /* Documents */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = PRD;
+			path = Documents;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -74,7 +74,7 @@
 		654548C330077F47005BB222 = {
 			isa = PBXGroup;
 			children = (
-				654548F630078059005BB222 /* PRD */,
+				654548F630078059005BB222 /* Documents */,
 				654548CE30077F47005BB222 /* CryptoPulse */,
 				654548DE30077F48005BB222 /* CryptoPulseTests */,
 				654548E830077F48005BB222 /* CryptoPulseUITests */,
@@ -107,7 +107,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				654548CE30077F47005BB222 /* CryptoPulse */,
-				654548F630078059005BB222 /* PRD */,
+				654548F630078059005BB222 /* Documents */,
 			);
 			name = CryptoPulse;
 			productName = CryptoPulse;
