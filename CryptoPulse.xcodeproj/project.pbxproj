@@ -33,8 +33,6 @@
 		656C89293008DD4200569FDD /* Exceptions for "CryptoPulseTests" folder in "CryptoPulse" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Tests/Helpers/TestData.swift,
-				"Tests/Helpers/XCTestCase+Extensions.swift",
 				Tests/Mocks/MockAPIClient.swift,
 				Tests/Mocks/MockCacheStore.swift,
 				Tests/Mocks/MockCoinRepository.swift,
@@ -74,14 +72,6 @@
 			);
 			target = 654548DA30077F48005BB222 /* CryptoPulseTests */;
 		};
-		656C892D3008DDAA00569FDD /* Exceptions for "CryptoPulseTests" folder in "CryptoPulseUITests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Tests/Helpers/TestData.swift,
-				"Tests/Helpers/XCTestCase+Extensions.swift",
-			);
-			target = 654548E430077F48005BB222 /* CryptoPulseUITests */;
-		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -95,7 +85,6 @@
 			exceptions = (
 				656C89293008DD4200569FDD /* Exceptions for "CryptoPulseTests" folder in "CryptoPulse" target */,
 				656C892A3008DD4200569FDD /* Exceptions for "CryptoPulseTests" folder in "CryptoPulseTests" target */,
-				656C892D3008DDAA00569FDD /* Exceptions for "CryptoPulseTests" folder in "CryptoPulseUITests" target */,
 			);
 			path = CryptoPulseTests;
 			sourceTree = "<group>";
