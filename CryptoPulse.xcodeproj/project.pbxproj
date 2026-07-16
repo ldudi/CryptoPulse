@@ -29,6 +29,61 @@
 		654548E530077F48005BB222 /* CryptoPulseUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CryptoPulseUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		656C89293008DD4200569FDD /* Exceptions for "CryptoPulseTests" folder in "CryptoPulse" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Tests/Helpers/TestData.swift,
+				"Tests/Helpers/XCTestCase+Extensions.swift",
+				Tests/Mocks/MockAPIClient.swift,
+				Tests/Mocks/MockCacheStore.swift,
+				Tests/Mocks/MockCoinRepository.swift,
+				Tests/Mocks/MockLogger.swift,
+				Tests/Mocks/MockPortfolioRepository.swift,
+				Tests/Models/CoinTests.swift,
+				Tests/Networking/APIClientTests.swift,
+				Tests/Networking/RequestBuilderTests.swift,
+				Tests/Networking/ResponseValidatorTests.swift,
+				Tests/Networking/URLSessionAPIClientTests.swift,
+				Tests/Repositories/CoinRepositoryTests.swift,
+				Tests/Repositories/PortfolioRepositoryTests.swift,
+				Tests/Utilities/LoggerTests.swift,
+				Tests/ViewModel/HomeViewModelTests.swift,
+				Tests/ViewModel/MarketViewModelTests.swift,
+			);
+			target = 654548CB30077F47005BB222 /* CryptoPulse */;
+		};
+		656C892A3008DD4200569FDD /* Exceptions for "CryptoPulseTests" folder in "CryptoPulseTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Tests/Mocks/MockAPIClient.swift,
+				Tests/Mocks/MockCacheStore.swift,
+				Tests/Mocks/MockCoinRepository.swift,
+				Tests/Mocks/MockLogger.swift,
+				Tests/Mocks/MockPortfolioRepository.swift,
+				Tests/Models/CoinTests.swift,
+				Tests/Networking/APIClientTests.swift,
+				Tests/Networking/RequestBuilderTests.swift,
+				Tests/Networking/ResponseValidatorTests.swift,
+				Tests/Networking/URLSessionAPIClientTests.swift,
+				Tests/Repositories/CoinRepositoryTests.swift,
+				Tests/Repositories/PortfolioRepositoryTests.swift,
+				Tests/Utilities/LoggerTests.swift,
+				Tests/ViewModel/HomeViewModelTests.swift,
+				Tests/ViewModel/MarketViewModelTests.swift,
+			);
+			target = 654548DA30077F48005BB222 /* CryptoPulseTests */;
+		};
+		656C892D3008DDAA00569FDD /* Exceptions for "CryptoPulseTests" folder in "CryptoPulseUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Tests/Helpers/TestData.swift,
+				"Tests/Helpers/XCTestCase+Extensions.swift",
+			);
+			target = 654548E430077F48005BB222 /* CryptoPulseUITests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		654548CE30077F47005BB222 /* CryptoPulse */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
@@ -37,6 +92,11 @@
 		};
 		654548DE30077F48005BB222 /* CryptoPulseTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				656C89293008DD4200569FDD /* Exceptions for "CryptoPulseTests" folder in "CryptoPulse" target */,
+				656C892A3008DD4200569FDD /* Exceptions for "CryptoPulseTests" folder in "CryptoPulseTests" target */,
+				656C892D3008DDAA00569FDD /* Exceptions for "CryptoPulseTests" folder in "CryptoPulseUITests" target */,
+			);
 			path = CryptoPulseTests;
 			sourceTree = "<group>";
 		};
@@ -100,6 +160,7 @@
 			buildConfigurationList = 654548ED30077F48005BB222 /* Build configuration list for PBXNativeTarget "CryptoPulse" */;
 			buildPhases = (
 				654548C830077F47005BB222 /* Sources */,
+				656C88D23008DA0F00569FDD /* ShellScript */,
 				654548C930077F47005BB222 /* Frameworks */,
 				654548CA30077F47005BB222 /* Resources */,
 			);
@@ -217,6 +278,22 @@
 			);
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		656C88D23008DA0F00569FDD /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			shellPath = /bin/sh;
+			shellScript = (
+				"# Type a script or drag a script file from your workspace to insert its path.",
+				"if which swiftlint >/dev/null; then",
+				"    swiftlint",
+				"else",
+				"    echo \"warning: SwiftLint not installed\"",
+				"fi",
+				"",
+			);
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		654548C830077F47005BB222 /* Sources */ = {
@@ -380,6 +457,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6VZ35QKS9T;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_TESTING_SEARCH_PATHS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -412,6 +490,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6VZ35QKS9T;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_TESTING_SEARCH_PATHS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

@@ -1,0 +1,32 @@
+included:
+  - CryptoPulse
+
+excluded:
+  - Pods
+  - DerivedData
+  - .build
+
+disabled_rules:
+  - trailing_whitespace
+  - todo
+
+opt_in_rules:
+  - empty_count
+  - force_unwrapping
+  - redundant_nil_coalescing
+  - unused_import
+
+line_length:
+  warning: 120
+  error: 180
+
+type_body_length:
+  warning: 250
+
+file_length:
+  warning: 600
+
+identifier_name:
+  min_length: 2
+
+reporter: "xcode"

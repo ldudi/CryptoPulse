@@ -1,0 +1,26 @@
+# Xcode
+DerivedData/
+.build/
+
+# User settings
+*.xcuserstate
+xcuserdata/
+
+# SwiftPM
+.build
+
+# CocoaPods
+Pods/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+
+# Mac
+.DS_Store
+
+# Secrets
+.env
+
+# API Keys
+Secrets.plist
