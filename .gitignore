@@ -6,6 +6,9 @@ DerivedData/
 *.xcuserstate
 xcuserdata/
 
+## Xcode user settings
+DerivedData/
+
 # SwiftPM
 .build
 
@@ -23,4 +26,4 @@ fastlane/Preview.html
 .env
 
 # API Keys
-Secrets.plist
+Secrets.plistobjects.txt
