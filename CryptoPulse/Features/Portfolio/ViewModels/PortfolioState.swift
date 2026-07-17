@@ -1,33 +1,20 @@
-//
-//  PortfolioState.swift
-//  CryptoPulse
-//
-//  Created by Labhesh Dudi on 18/07/26.
-//
-//
-//import Foundation
-//
-//  PortfolioState.swift
-//  CryptoPulse
-//
-
 import Foundation
 
+/// Holds the UI state for the portfolio screen.
 struct PortfolioState {
-
-    var holdings: [PortfolioHolding] = []
-
-    var isLoading = false
-
-    var errorMessage: String?
-
-    var totalValue: Double {
-        holdings.reduce(0) { result, holding in
-            result + holding.quantity
-        }
+    enum Status {
+        case idle
+        case loading
+        case loaded
+        case empty
+        case error(Error)
     }
 
-    var isEmpty: Bool {
-        holdings.isEmpty
-    }
+    var assets: [PortfolioAsset] = []
+    var totalValue: Double = 0.0
+    var assetCount: Int = 0
+    var totalCoins: Double = 0.0
+    var largestHolding: PortfolioAsset? = nil
+
+    var status: Status = .idle
 }
