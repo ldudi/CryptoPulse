@@ -9,32 +9,48 @@ final class AppCoordinator {
 
     enum Route: Hashable {
 
+        case launch
+        case splash
         case home
 
-        case splash
-
-        case launch
+        case coinDetail(String)
     }
+
+    // MARK: - Navigation
 
     var path: [Route] = []
 
     var root: Route = .launch
 
-    func showHome() {
+    // MARK: - Root Navigation
 
+    func showHome() {
         root = .home
     }
 
     func showSplash() {
-
         root = .splash
     }
 
-    func reset() {
+    // MARK: - Stack Navigation
 
+    func push(_ route: Route) {
+        path.append(route)
+    }
+
+    func pop() {
+        guard !path.isEmpty else { return }
+        path.removeLast()
+    }
+
+    func popToRoot() {
         path.removeAll()
     }
 
+    func reset() {
+        root = .launch
+        path.removeAll()
+    }
 }
 //
 //  AppCoordinator.swift

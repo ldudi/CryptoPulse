@@ -12,9 +12,15 @@
 
 import Foundation
 
+import Foundation
+
 protocol CoinRemoteDataSource {
 
     func fetchMarkets(
         request: MarketRequest
     ) async throws -> [CoinDTO]
+
+    func fetchCoinDetail(
+        id: String
+    ) async throws -> CoinDetailDTO
 }

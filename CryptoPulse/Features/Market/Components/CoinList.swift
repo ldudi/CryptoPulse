@@ -13,28 +13,33 @@
 
 import SwiftUI
 
+import SwiftUI
+
 struct CoinList: View {
 
     let coins: [Coin]
 
+    let onSelectCoin: (Coin) -> Void
+
     var body: some View {
 
-        LazyVStack(spacing: 12) {
+        LazyVStack(
+            spacing: Spacing.small
+        ) {
 
             ForEach(coins) { coin in
 
-                CoinRow(coin: coin)
+                CoinRow(
+                    coin: coin
+                )
+                .contentShape(
+                    Rectangle()
+                )
+                .onTapGesture {
+
+                    onSelectCoin(coin)
+                }
             }
         }
-    }
-}
-
-#Preview {
-
-    ScrollView {
-
-        CoinList(
-            coins: []
-        )
     }
 }

@@ -15,7 +15,7 @@ import Foundation
 enum CoinEndpoints {
 
     static func markets(
-        request: MarketRequest = MarketRequest()
+        request: MarketRequest = .init()
     ) -> Endpoint<[CoinDTO]> {
 
         Endpoint(
@@ -52,6 +52,49 @@ enum CoinEndpoints {
                 URLQueryItem(
                     name: "price_change_percentage",
                     value: request.priceChangePercentage.rawValue
+                )
+            ]
+        )
+    }
+
+    static func coinDetail(
+        id: String
+    ) -> Endpoint<CoinDetailDTO> {
+
+        Endpoint(
+
+            path: "coins/\(id)",
+
+            queryItems: [
+
+                URLQueryItem(
+                    name: "localization",
+                    value: "false"
+                ),
+
+                URLQueryItem(
+                    name: "tickers",
+                    value: "false"
+                ),
+
+                URLQueryItem(
+                    name: "market_data",
+                    value: "true"
+                ),
+
+                URLQueryItem(
+                    name: "community_data",
+                    value: "false"
+                ),
+
+                URLQueryItem(
+                    name: "developer_data",
+                    value: "false"
+                ),
+
+                URLQueryItem(
+                    name: "sparkline",
+                    value: "false"
                 )
             ]
         )

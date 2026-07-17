@@ -29,4 +29,15 @@ final class CoinRemoteDataSourceImpl: CoinRemoteDataSource {
             )
         )
     }
+    
+    func fetchCoinDetail(
+        id: String
+    ) async throws -> CoinDetailDTO {
+
+        try await apiClient.request(
+            CoinEndpoints.coinDetail(
+                id: id
+            )
+        )
+    }
 }

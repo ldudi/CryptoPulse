@@ -35,4 +35,18 @@ final class CoinRepositoryImpl: CoinRepository {
             dtos: dtos
         )
     }
+    
+    func getCoinDetail(
+            id: String
+        ) async throws -> CoinDetail {
+
+            let dto = try await remoteDataSource.fetchCoinDetail(
+                id: id
+            )
+
+            return CoinDetailMapper.map(
+                dto
+            )
+        }
+
 }

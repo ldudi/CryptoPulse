@@ -38,6 +38,16 @@ struct FeatureDependencies {
             getMarketCoins: appDependencies.getMarketCoinsUseCase
         )
     }
+    
+    func makeCoinDetailViewModel(
+        coinID: String
+    ) -> CoinDetailViewModel {
+
+        CoinDetailViewModel(
+            coinID: coinID,
+            getCoinDetail: appDependencies.getCoinDetailUseCase
+        )
+    }
 
     // MARK: - Future Features
 

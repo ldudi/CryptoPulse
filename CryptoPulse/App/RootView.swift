@@ -30,15 +30,28 @@ struct RootView: View {
                     switch route {
 
                     case .launch:
+
                         LaunchView()
 
                     case .splash:
+
                         SplashView()
 
                     case .home:
+
                         MarketView(
-                                viewModel: container.features.makeMarketViewModel()
-                            )
+                            viewModel: container.features.makeMarketViewModel()
+                        )
+
+                    case .coinDetail(let coinID):
+
+                        CoinDetailView(
+
+                            viewModel:
+                                container.features.makeCoinDetailViewModel(
+                                    coinID: coinID
+                                )
+                        )
                     }
                 }
         }
@@ -50,15 +63,28 @@ struct RootView: View {
         switch container.coordinator.root {
 
         case .launch:
+
             LaunchView()
 
         case .splash:
+
             SplashView()
 
         case .home:
+
             MarketView(
-                    viewModel: container.features.makeMarketViewModel()
-                )
+                viewModel: container.features.makeMarketViewModel()
+            )
+
+        case .coinDetail(let coinID):
+
+            CoinDetailView(
+
+                viewModel:
+                    container.features.makeCoinDetailViewModel(
+                        coinID: coinID
+                    )
+            )
         }
     }
 }

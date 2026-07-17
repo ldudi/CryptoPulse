@@ -17,4 +17,8 @@ protocol CoinRepository {
     func fetchMarkets(
         request: MarketRequest
     ) async throws -> [Coin]
+    
+    func getCoinDetail(
+        id: String
+    ) async throws -> CoinDetail
 }

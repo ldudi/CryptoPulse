@@ -38,6 +38,7 @@ final class AppDependencies {
     // MARK: - Use Cases
 
     let getMarketCoinsUseCase: GetMarketCoinsUseCase
+    let getCoinDetailUseCase: GetCoinDetailUseCase
 
     // MARK: - Initializer
 
@@ -71,6 +72,10 @@ final class AppDependencies {
             repository: coinRepository
         )
 
+        let getCoinDetailUseCase = Self.makeGetCoinDetailUseCase(
+            repository: coinRepository
+        )
+
         // Assign
 
         self.logger = logger
@@ -78,6 +83,7 @@ final class AppDependencies {
         self.coinRemoteDataSource = coinRemoteDataSource
         self.coinRepository = coinRepository
         self.getMarketCoinsUseCase = getMarketCoinsUseCase
+        self.getCoinDetailUseCase = getCoinDetailUseCase
     }
 }
 
@@ -113,6 +119,15 @@ private extension AppDependencies {
     ) -> GetMarketCoinsUseCase {
 
         GetMarketCoinsUseCase(
+            repository: repository
+        )
+    }
+    
+    static func makeGetCoinDetailUseCase(
+        repository: CoinRepository
+    ) -> GetCoinDetailUseCase {
+
+        GetCoinDetailUseCase(
             repository: repository
         )
     }

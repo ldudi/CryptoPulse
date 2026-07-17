@@ -18,6 +18,8 @@ struct MarketContentView: View {
     @Bindable
     var viewModel: MarketViewModel
 
+    let onSelectCoin: (Coin) -> Void
+
     var body: some View {
 
         Group {
@@ -35,7 +37,7 @@ struct MarketContentView: View {
             case .empty:
 
                 EmptyStateView(
-                    image: "", //archi
+                    image: "",
                     title: "No Coins",
                     message: "No cryptocurrencies were found."
                 )
@@ -71,7 +73,8 @@ struct MarketContentView: View {
                         )
 
                         CoinList(
-                            coins: viewModel.displayedCoins
+                            coins: viewModel.displayedCoins,
+                            onSelectCoin: onSelectCoin
                         )
                     }
                     .padding(.horizontal)
