@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct CryptoPulseApp: App {
@@ -12,7 +13,9 @@ struct CryptoPulseApp: App {
     private var appDelegate
 
     @State
-    private var container = DIContainer()
+    private var container = DIContainer(
+        persistence: PersistenceController()
+    )
 
     var body: some Scene {
 
@@ -21,6 +24,9 @@ struct CryptoPulseApp: App {
             RootView()
                 .environment(container)
         }
+        .modelContainer(
+            container.app.persistence.container
+        )
     }
 }
 ////

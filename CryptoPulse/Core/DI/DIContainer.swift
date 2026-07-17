@@ -31,7 +31,8 @@ final class DIContainer {
     let features: FeatureDependencies
 
     init(
-        configuration: AppConfiguration = .live
+        configuration: AppConfiguration = .live,
+        persistence: PersistenceController
     ) {
 
         self.configuration = configuration
@@ -39,7 +40,8 @@ final class DIContainer {
         self.coordinator = AppCoordinator()
 
         self.app = AppDependencies(
-            configuration: configuration
+            configuration: configuration,
+            persistence: persistence
         )
 
         self.features = FeatureDependencies(

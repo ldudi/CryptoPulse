@@ -14,6 +14,8 @@ final class AppCoordinator {
         case home
 
         case coinDetail(String)
+
+        case portfolio          // ← Add this
     }
 
     // MARK: - Navigation
@@ -30,6 +32,10 @@ final class AppCoordinator {
 
     func showSplash() {
         root = .splash
+    }
+
+    func showPortfolio() {
+        root = .portfolio
     }
 
     // MARK: - Stack Navigation

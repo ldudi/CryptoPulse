@@ -52,6 +52,13 @@ struct RootView: View {
                                     coinID: coinID
                                 )
                         )
+                        
+                    case .portfolio:
+
+                        PortfolioView(
+                            viewModel: container.features.makePortfolioViewModel()
+                        )
+                        
                     }
                 }
         }
@@ -85,6 +92,13 @@ struct RootView: View {
                         coinID: coinID
                     )
             )
+            
+        case .portfolio:
+
+            PortfolioView(
+                viewModel: container.features.makePortfolioViewModel()
+            )
+            
         }
     }
 }

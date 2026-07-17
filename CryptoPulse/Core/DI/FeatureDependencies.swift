@@ -48,10 +48,15 @@ struct FeatureDependencies {
             getCoinDetail: appDependencies.getCoinDetailUseCase
         )
     }
+    
+    func makePortfolioViewModel() -> PortfolioViewModel {
+
+        PortfolioViewModel(
+            getPortfolio: appDependencies.getPortfolioUseCase,
+            deleteHolding: appDependencies.deleteHoldingUseCase
+        )
+    }
 
     // MARK: - Future Features
-
-    // func makeCoinDetailViewModel(...)
-    // func makePortfolioViewModel(...)
     // func makeFavoritesViewModel(...)
 }

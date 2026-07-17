@@ -13,6 +13,11 @@
 //  Created by Labhesh Dudi.
 //
 
+//
+//  AppDependencies.swift
+//  CryptoPulse
+//
+
 import Foundation
 
 @MainActor
@@ -22,6 +27,7 @@ final class AppDependencies {
 
     let configuration: AppConfiguration
     let logger: AppLogger
+    let persistence: PersistenceController
 
     // MARK: - Networking
 
@@ -34,39 +40,56 @@ final class AppDependencies {
     // MARK: - Repositories
 
     let coinRepository: CoinRepository
+    let portfolioRepository: PortfolioRepository
 
     // MARK: - Use Cases
 
     let getMarketCoinsUseCase: GetMarketCoinsUseCase
     let getCoinDetailUseCase: GetCoinDetailUseCase
 
+    // MARK: - Portfolio Use Cases
+
+    let addHoldingUseCase: AddHoldingUseCase
+    let updateHoldingUseCase: UpdateHoldingUseCase
+    let deleteHoldingUseCase: DeleteHoldingUseCase
+    let getPortfolioUseCase: GetPortfolioUseCase
+    let getHoldingUseCase: GetHoldingUseCase
+
     // MARK: - Initializer
 
-    init(configuration: AppConfiguration) {
+    init(
+        configuration: AppConfiguration,
+        persistence: PersistenceController
+    ) {
 
         self.configuration = configuration
+        self.persistence = persistence
 
-        // Core
+        // MARK: Core
 
         let logger = LoggerFactory.makeLogger(category: .app)
 
-        // Networking
+        // MARK: Networking
 
         let apiClient = Self.makeAPIClient()
 
-        // Data Sources
+        // MARK: Data Sources
 
         let coinRemoteDataSource = Self.makeCoinRemoteDataSource(
             apiClient: apiClient
         )
 
-        // Repositories
+        // MARK: Repositories
 
         let coinRepository = Self.makeCoinRepository(
             remoteDataSource: coinRemoteDataSource
         )
 
-        // Use Cases
+        let portfolioRepository = PortfolioRepositoryImpl(
+            persistence: persistence
+        )
+
+        // MARK: Use Cases
 
         let getMarketCoinsUseCase = Self.makeGetMarketCoinsUseCase(
             repository: coinRepository
@@ -76,14 +99,43 @@ final class AppDependencies {
             repository: coinRepository
         )
 
-        // Assign
+        let addHoldingUseCase = AddHoldingUseCase(
+            repository: portfolioRepository
+        )
+
+        let updateHoldingUseCase = UpdateHoldingUseCase(
+            repository: portfolioRepository
+        )
+
+        let deleteHoldingUseCase = DeleteHoldingUseCase(
+            repository: portfolioRepository
+        )
+
+        let getPortfolioUseCase = GetPortfolioUseCase(
+            repository: portfolioRepository
+        )
+
+        let getHoldingUseCase = GetHoldingUseCase(
+            repository: portfolioRepository
+        )
+
+        // MARK: Assign
 
         self.logger = logger
         self.apiClient = apiClient
         self.coinRemoteDataSource = coinRemoteDataSource
+
         self.coinRepository = coinRepository
+        self.portfolioRepository = portfolioRepository
+
         self.getMarketCoinsUseCase = getMarketCoinsUseCase
         self.getCoinDetailUseCase = getCoinDetailUseCase
+
+        self.addHoldingUseCase = addHoldingUseCase
+        self.updateHoldingUseCase = updateHoldingUseCase
+        self.deleteHoldingUseCase = deleteHoldingUseCase
+        self.getPortfolioUseCase = getPortfolioUseCase
+        self.getHoldingUseCase = getHoldingUseCase
     }
 }
 
@@ -122,7 +174,7 @@ private extension AppDependencies {
             repository: repository
         )
     }
-    
+
     static func makeGetCoinDetailUseCase(
         repository: CoinRepository
     ) -> GetCoinDetailUseCase {
