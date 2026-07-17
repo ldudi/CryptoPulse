@@ -36,4 +36,7 @@ enum AppIcon {
 
     // New icon for editing a holding
     static let edit = "pencil"
+
+    // Icon for deleting a holding
+    static let trash = "trash"
 }
