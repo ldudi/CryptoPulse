@@ -1,6 +1,14 @@
 import Foundation
 
 /// Fetches portfolio holdings and enriches them with live market data.
+///
+/// This use case deliberately **does not** create any fabricated `Coin` objects.
+/// In a clean architecture, domain models must represent real data.  
+/// If market data for a holding is missing we simply skip that asset – the
+/// caller can decide how to handle incomplete portfolios (e.g., show an
+/// empty state or partial list).  This approach keeps the domain layer free of
+/// any assumptions about what constitutes “valid” data and avoids leaking
+/// placeholder values into higher layers.
 final class GetPortfolioAssetsUseCase {
 
     // MARK: - Dependencies
@@ -21,6 +29,9 @@ final class GetPortfolioAssetsUseCase {
     // MARK: - Public API
 
     /// Returns an array of `PortfolioAsset` objects that combine holdings with market data.
+    ///
+    /// Only assets for which market data is available are returned.  Assets
+    /// without corresponding market information are omitted, but no error is thrown.
     func execute() async throws -> [PortfolioAsset] {
         // 1️⃣ Load all stored holdings.
         let holdings = try await portfolioRepository.holdings()
@@ -55,19 +66,8 @@ final class GetPortfolioAssetsUseCase {
                 let asset = PortfolioAsset(holding: holding, coin: coin)
                 assets.append(asset)
             } else {
-                // If market data is missing we create a placeholder with zero price.
-                let placeholderCoin = Coin(
-                    id: holding.coinID,
-                    symbol: holding.symbol,
-                    name: holding.name,
-                    imageURL: holding.imageURL,
-                    currentPrice: 0.0,
-                    marketCap: nil,
-                    marketCapRank: nil,
-                    priceChange24H: nil
-                )
-                let asset = PortfolioAsset(holding: holding, coin: placeholderCoin)
-                assets.append(asset)
+                // Market data missing – skip this holding.  No placeholder is created.
+                continue
             }
         }
 
