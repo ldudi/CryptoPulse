@@ -1,7 +1,12 @@
 import Foundation
 
 /// A presentation‑level model that combines a stored holding with live market data.
-struct PortfolioAsset {
+struct PortfolioAsset: Identifiable {
+    // MARK: - Identification
+
+    /// Unique identifier for SwiftUI lists.  Uses the underlying coin ID.
+    var id: String { coinID }
+
     // MARK: - Holding information
 
     let coinID: String
