@@ -74,19 +74,26 @@ final class CoinDetailViewModel {
 
         do {
             if let existing = currentHolding {
-                try await updateHoldingUseCase.execute(
-                    coinID: coinID,
+                // Update existing holding
+                let updated = PortfolioHolding(
+                    coinID: existing.coinID,
+                    symbol: existing.symbol,
+                    name: existing.name,
+                    imageURL: existing.imageURL,
                     quantity: quantity
                 )
+                try await updateHoldingUseCase.execute(updated)
             } else {
                 guard let coin = self.coin else { return }
-                try await addHoldingUseCase.execute(
+                // Add new holding
+                let newHolding = PortfolioHolding(
                     coinID: coin.id,
                     symbol: coin.symbol,
                     name: coin.name,
                     imageURL: coin.imageURL,
                     quantity: quantity
                 )
+                try await addHoldingUseCase.execute(newHolding)
             }
 
             // Reload holding after successful operation.
