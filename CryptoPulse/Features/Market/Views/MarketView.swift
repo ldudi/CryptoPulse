@@ -15,34 +15,26 @@
 import SwiftUI
 
 struct MarketView: View {
-    @Environment(DIContainer.self)
-    private var container
-    
+
     @State
-    private var viewModel: MarketViewModel?
-    
+    private var viewModel: MarketViewModel
+
+    init(viewModel: MarketViewModel) {
+        _viewModel = State(initialValue: viewModel)
+    }
+
     var body: some View {
-        
-        Group {
+
+        MarketContentView(
+            viewModel: viewModel
+        )
+        .onAppear {
             
-            if let viewModel {
-                
-                MarketContentView(viewModel: viewModel)
-                
-            } else {
-                
-                LoadingView()
+            guard !viewModel.hasContent else { return }
+            
+            Task {
+                await viewModel.loadMarkets()
             }
-        }
-        .task {
-            
-            guard viewModel == nil else { return }
-            
-            let vm = container.features.makeMarketViewModel()
-            
-            viewModel = vm
-            
-            await vm.loadMarkets()
         }
     }
 }

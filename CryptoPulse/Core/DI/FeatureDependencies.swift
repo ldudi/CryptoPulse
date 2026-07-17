@@ -29,7 +29,9 @@ struct FeatureDependencies {
     var logger: AppLogger {
         appDependencies.logger
     }
-    
+
+    // MARK: - Market
+
     func makeMarketViewModel() -> MarketViewModel {
 
         MarketViewModel(
@@ -37,13 +39,9 @@ struct FeatureDependencies {
         )
     }
 
-    // MARK: - Repositories
-    // (Sprint 3+)
+    // MARK: - Future Features
 
-    // var coinRepository: CoinRepository
-
-    // MARK: - Services
-    // (Sprint 3+)
-
-    // var apiClient: APIClient
+    // func makeCoinDetailViewModel(...)
+    // func makePortfolioViewModel(...)
+    // func makeFavoritesViewModel(...)
 }

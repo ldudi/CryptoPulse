@@ -36,7 +36,9 @@ struct RootView: View {
                         SplashView()
 
                     case .home:
-                        MarketView()
+                        MarketView(
+                                viewModel: container.features.makeMarketViewModel()
+                            )
                     }
                 }
         }
@@ -54,7 +56,9 @@ struct RootView: View {
             SplashView()
 
         case .home:
-            MarketView()
+            MarketView(
+                    viewModel: container.features.makeMarketViewModel()
+                )
         }
     }
 }

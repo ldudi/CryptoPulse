@@ -26,7 +26,7 @@ struct MarketContentView: View {
 
             case .idle:
 
-                EmptyView()
+                ProgressView()
 
             case .loading:
 
