@@ -72,10 +72,50 @@ final class URLSessionAPIClient: APIClient {
                     return EmptyResponse() as! Response
                 }
 
-                return try JSONDecoder.apiDecoder.decode(
-                    Response.self,
-                    from: data
-                )
+                do {
+
+                    return try JSONDecoder.apiDecoder.decode(
+                        Response.self,
+                        from: data
+                    )
+
+                } catch let error as DecodingError {
+
+                    print("===================================")
+                    print("DECODING ERROR")
+                    print("===================================")
+
+                    switch error {
+
+                    case .keyNotFound(let key, let context):
+
+                        print("❌ Key not found:", key.stringValue)
+                        print(context.debugDescription)
+                        print(context.codingPath)
+
+                    case .typeMismatch(let type, let context):
+
+                        print("❌ Type mismatch:", type)
+                        print(context.debugDescription)
+                        print(context.codingPath)
+
+                    case .valueNotFound(let type, let context):
+
+                        print("❌ Value not found:", type)
+                        print(context.debugDescription)
+                        print(context.codingPath)
+
+                    case .dataCorrupted(let context):
+
+                        print("❌ Data corrupted")
+                        print(context.debugDescription)
+
+                    @unknown default:
+                        print(error)
+                    }
+
+                    throw error
+                }
 
             }
 
