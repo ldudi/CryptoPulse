@@ -9,39 +9,54 @@
 //
 //  AppLogger.swift
 //
+//
+//  AppLogger.swift
+//  CryptoPulse
+//
 
 import Foundation
 
-protocol AppLogger {
+import Foundation
 
-    func log(
-        _ message: String,
-        level: LogLevel,
-        category: LogCategory
-    )
+protocol AppLogger: Sendable {
 
     func debug(
         _ message: String,
-        category: LogCategory
+        category: LogCategory?,
+        file: String,
+        function: String,
+        line: Int
     )
 
     func info(
         _ message: String,
-        category: LogCategory
+        category: LogCategory?,
+        file: String,
+        function: String,
+        line: Int
     )
 
     func warning(
         _ message: String,
-        category: LogCategory
+        category: LogCategory?,
+        file: String,
+        function: String,
+        line: Int
     )
 
     func error(
         _ message: String,
-        category: LogCategory
+        category: LogCategory?,
+        file: String,
+        function: String,
+        line: Int
     )
 
     func critical(
         _ message: String,
-        category: LogCategory
+        category: LogCategory?,
+        file: String,
+        function: String,
+        line: Int
     )
 }

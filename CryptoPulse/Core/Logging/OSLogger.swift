@@ -13,106 +13,185 @@
 import Foundation
 import OSLog
 
-final class OSLogger: AppLogger {
+final class OSLogger: AppLogger, @unchecked Sendable {
+
+    // MARK: - Properties
+
+    private let defaultCategory: LogCategory
 
     private let subsystem = Bundle.main.bundleIdentifier ?? "CryptoPulse"
 
-    func log(
-        _ message: String,
-        level: LogLevel,
-        category: LogCategory
+    private lazy var loggers: [LogCategory: Logger] = {
+
+        Dictionary(
+            uniqueKeysWithValues:
+
+            LogCategory.allCases.map {
+
+                (
+                    $0,
+
+                    Logger(
+                        subsystem: subsystem,
+                        category: $0.rawValue
+                    )
+                )
+            }
+        )
+
+    }()
+
+    // MARK: - Initializer
+
+    init(
+        defaultCategory: LogCategory = .app
     ) {
 
-        let logger = Logger(
-            subsystem: subsystem,
-            category: category.rawValue
-        )
+        self.defaultCategory = defaultCategory
+    }
+
+    // MARK: - Private
+
+    private func log(
+
+        _ message: String,
+
+        level: LogLevel,
+
+        category: LogCategory,
+
+        file: String,
+
+        function: String,
+
+        line: Int
+
+    ) {
+
+        guard let logger = loggers[category] else {
+            return
+        }
+
+        let formattedMessage =
+        "[\(file):\(line)] \(function) - \(message)"
 
         switch level {
 
         case .trace:
 
-            logger.trace("\(message)")
+            logger.trace("\(formattedMessage, privacy: .public)")
 
         case .debug:
 
-            logger.debug("\(message)")
+            logger.debug("\(formattedMessage, privacy: .public)")
 
         case .info:
 
-            logger.info("\(message)")
+            logger.info("\(formattedMessage, privacy: .public)")
 
         case .warning:
 
-            logger.warning("\(message)")
+            logger.warning("\(formattedMessage, privacy: .public)")
 
         case .error:
 
-            logger.error("\(message)")
+            logger.error("\(formattedMessage, privacy: .public)")
 
         case .critical:
 
-            logger.critical("\(message)")
+            logger.critical("\(formattedMessage, privacy: .public)")
         }
     }
 
+    // MARK: - AppLogger
+
     func debug(
         _ message: String,
-        category: LogCategory
+        category: LogCategory? = nil,
+        file: String = #fileID,
+        function: String = #function,
+        line: Int = #line
     ) {
 
         log(
             message,
             level: .debug,
-            category: category
+            category: category ?? defaultCategory,
+            file: file,
+            function: function,
+            line: line
         )
     }
 
     func info(
         _ message: String,
-        category: LogCategory
+        category: LogCategory? = nil,
+        file: String = #fileID,
+        function: String = #function,
+        line: Int = #line
     ) {
 
         log(
             message,
             level: .info,
-            category: category
+            category: category ?? defaultCategory,
+            file: file,
+            function: function,
+            line: line
         )
     }
 
     func warning(
         _ message: String,
-        category: LogCategory
+        category: LogCategory? = nil,
+        file: String = #fileID,
+        function: String = #function,
+        line: Int = #line
     ) {
 
         log(
             message,
             level: .warning,
-            category: category
+            category: category ?? defaultCategory,
+            file: file,
+            function: function,
+            line: line
         )
     }
 
     func error(
         _ message: String,
-        category: LogCategory
+        category: LogCategory? = nil,
+        file: String = #fileID,
+        function: String = #function,
+        line: Int = #line
     ) {
 
         log(
             message,
             level: .error,
-            category: category
+            category: category ?? defaultCategory,
+            file: file,
+            function: function,
+            line: line
         )
     }
 
     func critical(
         _ message: String,
-        category: LogCategory
+        category: LogCategory? = nil,
+        file: String = #fileID,
+        function: String = #function,
+        line: Int = #line
     ) {
 
         log(
             message,
             level: .critical,
-            category: category
+            category: category ?? defaultCategory,
+            file: file,
+            function: function,
+            line: line
         )
     }
 }

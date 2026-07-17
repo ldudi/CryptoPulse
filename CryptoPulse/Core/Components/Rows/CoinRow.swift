@@ -7,6 +7,7 @@
 //
 //import Foundation
 //
+//
 //  CoinRow.swift
 //  CryptoPulse
 //
@@ -15,15 +16,7 @@ import SwiftUI
 
 struct CoinRow: View {
 
-    let rank: Int
-
-    let symbol: String
-
-    let name: String
-
-    let price: String
-
-    let change24H: Double
+    let coin: Coin
 
     var body: some View {
 
@@ -31,30 +24,27 @@ struct CoinRow: View {
 
             // MARK: Rank
 
-            Text("\(rank)")
+            Text("\(coin.marketCapRank)")
                 .font(Typography.caption)
                 .foregroundStyle(AppColors.secondaryText)
-                .frame(width: 30)
+                .frame(width: 32)
 
-            // MARK: Coin Icon
+            // MARK: Coin Image
 
-            Circle()
-                .fill(AppColors.border)
-                .frame(width: 44, height: 44)
-                .overlay {
+            RemoteImageView(
+                url: coin.imageURL
+            )
+            .frame(width: 44, height: 44)
+            .clipShape(Circle())
 
-                    Text(symbol.prefix(1))
-                        .font(Typography.headline)
-                }
-
-            // MARK: Coin Name
+            // MARK: Name
 
             VStack(alignment: .leading, spacing: 4) {
 
-                Text(name)
+                Text(coin.name)
                     .font(Typography.headline)
 
-                Text(symbol.uppercased())
+                Text(coin.symbol)
                     .font(Typography.caption)
                     .foregroundStyle(AppColors.secondaryText)
             }
@@ -63,54 +53,19 @@ struct CoinRow: View {
 
             // MARK: Price
 
-            VStack(alignment: .trailing, spacing: 4) {
+            VStack(alignment: .trailing, spacing: 6) {
 
-                Text(price)
-                    .font(Typography.headline)
+                Text(
+                    coin.currentPrice,
+                    format: .currency(code: "USD")
+                )
+                .font(Typography.headline)
 
-                HStack(spacing: 2) {
-
-                    Image(
-                        systemName: change24H >= 0
-                        ? AppIcon.arrowUp
-                        : AppIcon.arrowDown
-                    )
-
-                    Text(
-                        String(format: "%.2f%%", abs(change24H))
-                    )
-                }
-                .font(Typography.caption)
-                .foregroundStyle(
-                    change24H >= 0
-                    ? AppColors.success
-                    : AppColors.error
+                PriceChangeBadge(
+                    percentage: coin.priceChangePercentage24H ?? 0.0 // archi
                 )
             }
         }
         .padding(.vertical, Spacing.small)
     }
-}
-
-#Preview {
-
-    VStack {
-
-        CoinRow(
-            rank: 1,
-            symbol: "BTC",
-            name: "Bitcoin",
-            price: "$118,000",
-            change24H: 2.6
-        )
-
-        CoinRow(
-            rank: 2,
-            symbol: "ETH",
-            name: "Ethereum",
-            price: "$3,400",
-            change24H: -4.1
-        )
-    }
-    .padding()
 }

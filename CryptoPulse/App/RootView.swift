@@ -36,8 +36,7 @@ struct RootView: View {
                         SplashView()
 
                     case .home:
-                        SplashView()
-//                        HomeView()
+                        MarketView()
                     }
                 }
         }
@@ -55,8 +54,7 @@ struct RootView: View {
             SplashView()
 
         case .home:
-            SplashView()
-//            HomeView()
+            MarketView()
         }
     }
 }

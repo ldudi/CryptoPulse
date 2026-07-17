@@ -10,25 +10,24 @@
 //  LogCategory.swift
 //
 
+//
+//  LogCategory.swift
+//  CryptoPulse
+//
+
 import Foundation
 
-enum LogCategory: String {
+enum LogCategory: String, CaseIterable {
 
-    case app = "Application"
+    case app
 
-    case network = "Networking"
+    case networking
 
-    case database = "Database"
+    case repository
 
-    case persistence = "Persistence"
+    case useCase
 
-    case ui = "UI"
+    case persistence
 
-    case navigation = "Navigation"
-
-    case analytics = "Analytics"
-
-    case performance = "Performance"
-
-    case security = "Security"
+    case ui
 }

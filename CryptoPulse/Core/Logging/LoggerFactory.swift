@@ -10,9 +10,21 @@
 //  LoggerFactory.swift
 //
 
+//
+//  LoggerFactory.swift
+//  CryptoPulse
+//
+
 import Foundation
 
 enum LoggerFactory {
 
-    static let shared: AppLogger = OSLogger()
+    static func makeLogger(
+        category: LogCategory = .app
+    ) -> AppLogger {
+
+        OSLogger(
+            defaultCategory: category
+        )
+    }
 }

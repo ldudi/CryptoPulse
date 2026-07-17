@@ -29,6 +29,13 @@ struct FeatureDependencies {
     var logger: AppLogger {
         appDependencies.logger
     }
+    
+    func makeMarketViewModel() -> MarketViewModel {
+
+        MarketViewModel(
+            getMarketCoins: appDependencies.getMarketCoinsUseCase
+        )
+    }
 
     // MARK: - Repositories
     // (Sprint 3+)
