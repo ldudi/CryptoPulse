@@ -38,14 +38,12 @@ struct PortfolioView: View {
             EmptyPortfolioView()
 
         case .error(let error):
-            ContentUnavailableView(
-                "Error",
-                systemImage: AppIcon.error
+            ErrorView(
+                title: "Error",
+                message: error.localizedDescription,
+                buttonTitle: "Retry"
             ) {
-                Button("Retry") { Task { await viewModel.refresh() } }
-            } message: {
-                Text(error.localizedDescription)
-                    .multilineTextAlignment(.center)
+                Task { await viewModel.refresh() }
             }
 
         case .loaded:
