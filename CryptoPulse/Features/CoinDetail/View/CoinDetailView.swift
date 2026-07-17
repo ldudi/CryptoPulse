@@ -5,8 +5,9 @@ struct CoinDetailView: View {
     @State
     private var viewModel: CoinDetailViewModel
 
-    @Environment(AppCoordinator.self)
-    private var coordinator: AppCoordinator
+    // Access the DI container to reach the coordinator.
+    @Environment(DIContainer.self)
+    private var container: DIContainer
 
     // Sheet & dialog state
     @State
@@ -88,7 +89,7 @@ struct CoinDetailView: View {
                 onSave: { qty in
                     Task {
                         await viewModel.saveHolding(quantity: qty)
-                        coordinator.showPortfolio()
+                        container.coordinator.showPortfolio()
                         showEditor = false
                     }
                 },
@@ -98,7 +99,7 @@ struct CoinDetailView: View {
         }
         .alert("Delete Holding", isPresented: $showDeleteConfirmation) {
             Button("Delete", role: .destructive) {
-                Task { await viewModel.deleteHolding(); coordinator.showPortfolio() }
+                Task { await viewModel.deleteHolding(); container.coordinator.showPortfolio() }
             }
             Button("Cancel", role: .cancel) {}
         } message: {
