@@ -1,7 +1,3 @@
-//
-//  AppCoordinator.swift
-//
-
 import Observation
 
 @Observable
@@ -15,7 +11,7 @@ final class AppCoordinator {
 
         case coinDetail(String)
 
-        case portfolio          // ← Add this
+        case portfolio
     }
 
     // MARK: - Navigation
@@ -58,11 +54,3 @@ final class AppCoordinator {
         path.removeAll()
     }
 }
-//
-//  AppCoordinator.swift
-//  CryptoPulse
-//
-//  Created by Labhesh Dudi on 15/07/26.
-//
-//
-//import Foundation

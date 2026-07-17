@@ -1,16 +1,3 @@
-//
-//  PortfolioViewModel.swift
-//  CryptoPulse
-//
-//  Created by Labhesh Dudi on 18/07/26.
-//
-//
-//import Foundation
-//
-//  PortfolioViewModel.swift
-//  CryptoPulse
-//
-
 import Foundation
 import Observation
 
@@ -36,16 +23,11 @@ final class PortfolioViewModel {
         state.isLoading = true
         state.errorMessage = nil
 
-        defer {
-            state.isLoading = false
-        }
+        defer { state.isLoading = false }
 
         do {
-
             state.holdings = try await getPortfolio.execute()
-
         } catch {
-
             state.errorMessage = error.localizedDescription
         }
     }
@@ -55,21 +37,14 @@ final class PortfolioViewModel {
     ) async {
 
         do {
-
-            try await deleteHolding.execute(
-                coinID: coinID
-            )
-
+            try await deleteHolding.execute(coinID: coinID)
             await loadPortfolio()
-
         } catch {
-
             state.errorMessage = error.localizedDescription
         }
     }
 
     func refresh() async {
-
         await loadPortfolio()
     }
 }

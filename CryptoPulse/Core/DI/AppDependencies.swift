@@ -1,23 +1,3 @@
-//
-//  AppDependencies.swift
-//  CryptoPulse
-//
-//  Created by Labhesh Dudi on 15/07/26.
-//
-//
-//import Foundation
-//
-//  AppDependencies.swift
-//  CryptoPulse
-//
-//  Created by Labhesh Dudi.
-//
-
-//
-//  AppDependencies.swift
-//  CryptoPulse
-//
-
 import Foundation
 
 @MainActor
@@ -144,43 +124,30 @@ final class AppDependencies {
 private extension AppDependencies {
 
     static func makeAPIClient() -> APIClient {
-
         URLSessionAPIClient()
     }
 
     static func makeCoinRemoteDataSource(
         apiClient: APIClient
     ) -> CoinRemoteDataSource {
-
-        CoinRemoteDataSourceImpl(
-            apiClient: apiClient
-        )
+        CoinRemoteDataSourceImpl(apiClient: apiClient)
     }
 
     static func makeCoinRepository(
         remoteDataSource: CoinRemoteDataSource
     ) -> CoinRepository {
-
-        CoinRepositoryImpl(
-            remoteDataSource: remoteDataSource
-        )
+        CoinRepositoryImpl(remoteDataSource: remoteDataSource)
     }
 
     static func makeGetMarketCoinsUseCase(
         repository: CoinRepository
     ) -> GetMarketCoinsUseCase {
-
-        GetMarketCoinsUseCase(
-            repository: repository
-        )
+        GetMarketCoinsUseCase(repository: repository)
     }
 
     static func makeGetCoinDetailUseCase(
         repository: CoinRepository
     ) -> GetCoinDetailUseCase {
-
-        GetCoinDetailUseCase(
-            repository: repository
-        )
+        GetCoinDetailUseCase(repository: repository)
     }
 }
