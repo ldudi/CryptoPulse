@@ -5,7 +5,7 @@ struct CoinDetailView: View {
     @State
     private var viewModel: CoinDetailViewModel
 
-    @EnvironmentObject
+    @Environment(AppCoordinator.self)
     private var coordinator: AppCoordinator
 
     // Sheet & dialog state
