@@ -1,15 +1,3 @@
-//
-//  Icons.swift
-//  CryptoPulse
-//
-//  Created by Labhesh Dudi on 16/07/26.
-//
-//
-//import Foundation
-//
-//  Icons.swift
-//
-
 import SwiftUI
 
 enum AppIcon {
@@ -45,4 +33,7 @@ enum AppIcon {
     static let error = "exclamationmark.triangle"
 
     static let success = "checkmark.circle.fill"
+
+    // New icon for editing a holding
+    static let edit = "pencil"
 }
