@@ -1,0 +1,41 @@
+import Foundation
+
+/// A presentation‑level model that combines a stored holding with live market data.
+struct PortfolioAsset {
+    // MARK: - Holding information
+
+    let coinID: String
+    let symbol: String
+    let name: String
+    let imageURL: URL?
+    let quantity: Double
+
+    // MARK: - Market data
+
+    /// Current price in the selected currency (USD by default).
+    let currentPrice: Double
+
+    /// Value of this holding (`quantity * currentPrice`).
+    let currentValue: Double
+
+    /// 24‑hour percentage change.
+    let priceChange24H: Double?
+
+    /// Rank by market cap.
+    let marketCapRank: Int?
+
+    // MARK: - Initializer
+
+    init(holding: PortfolioHolding, coin: Coin) {
+        self.coinID = holding.coinID
+        self.symbol = holding.symbol
+        self.name = holding.name
+        self.imageURL = holding.imageURL
+        self.quantity = holding.quantity
+
+        self.currentPrice = coin.currentPrice
+        self.currentValue = coin.currentPrice * holding.quantity
+        self.priceChange24H = coin.priceChange24H
+        self.marketCapRank = coin.marketCapRank
+    }
+}
