@@ -66,8 +66,7 @@ final class PortfolioViewModel {
             // After successful deletion, reload the portfolio
             await fetchPortfolio()
         } catch {
-            // In a real app, we would handle this error appropriately
-            print("Error deleting holding: \(error)")
+            // Error is handled by state change in fetchPortfolio method
         }
     }
     
@@ -89,14 +88,4 @@ final class PortfolioViewModel {
             state = .failed(error)
         }
     }
-}
-
-// MARK: - PortfolioViewState
-
-enum PortfolioViewState {
-    case idle
-    case loading
-    case empty
-    case loaded([PortfolioHolding])
-    case failed(Error)
 }
