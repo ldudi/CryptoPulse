@@ -16,6 +16,9 @@ final class CoinDetailViewModel {
 
     /// Indicates whether a save or delete operation is in progress.
     var isSaving: Bool = false
+    
+    /// Indicates whether the holding editor sheet should be shown.
+    var isShowingEditor: Bool = false
 
     // MARK: - Dependencies
 
@@ -67,6 +70,16 @@ final class CoinDetailViewModel {
         await fetchCoin()
     }
 
+    /// Show the holding editor sheet.
+    func showEditor() {
+        isShowingEditor = true
+    }
+    
+    /// Hide the holding editor sheet.
+    func hideEditor() {
+        isShowingEditor = false
+    }
+
     /// Save or update a holding with the given quantity.
     func saveHolding(quantity: Double) async {
         isSaving = true
@@ -80,7 +93,8 @@ final class CoinDetailViewModel {
                     symbol: existing.symbol,
                     name: existing.name,
                     imageURL: existing.imageURL,
-                    quantity: quantity
+                    quantity: quantity,
+                    averageBuyPrice: existing.averageBuyPrice
                 )
                 try await updateHoldingUseCase.execute(updated)
             } else {
@@ -91,13 +105,15 @@ final class CoinDetailViewModel {
                     symbol: coin.symbol,
                     name: coin.name,
                     imageURL: coin.imageURL,
-                    quantity: quantity
+                    quantity: quantity,
+                    averageBuyPrice: 0.0 // Default value, will be updated when user enters it
                 )
                 try await addHoldingUseCase.execute(newHolding)
             }
 
             // Reload holding after successful operation.
             await loadHolding()
+            hideEditor()
         } catch {
             // In a production app you would surface this error to the UI.
             print("Error saving holding: \(error)")
@@ -112,6 +128,7 @@ final class CoinDetailViewModel {
         do {
             try await deleteHoldingUseCase.execute(coinID: coinID)
             currentHolding = nil
+            hideEditor()
         } catch {
             print("Error deleting holding: \(error)")
         }
