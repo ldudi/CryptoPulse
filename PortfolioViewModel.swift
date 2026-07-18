@@ -9,7 +9,6 @@ final class PortfolioViewModel {
 
     private let getPortfolioAssetsUseCase: GetPortfolioAssetsUseCase
     private let deleteHoldingUseCase: DeleteHoldingUseCase
-    private let analyticsService: PortfolioAnalyticsService
 
     // MARK: - State
 
@@ -23,7 +22,6 @@ final class PortfolioViewModel {
     ) {
         self.getPortfolioAssetsUseCase = getPortfolioAssetsUseCase
         self.deleteHoldingUseCase = deleteHoldingUseCase
-        self.analyticsService = PortfolioAnalyticsService()
     }
 
     // MARK: - Public API
@@ -42,15 +40,15 @@ final class PortfolioViewModel {
             if assets.isEmpty {
                 // No holdings – show empty state.
                 state.assets = []
-                state.analytics = nil
+                state.totalValue = 0.0
+                state.assetCount = 0
+                state.totalCoins = 0.0
+                state.largestHolding = nil
                 state.status = .empty
             } else {
-                // Calculate analytics and update state
-                let analytics = analyticsService.calculateAnalytics(from: assets)
-                
                 // Populate assets and compute derived values.
                 state.assets = assets
-                state.analytics = analytics
+                computeDerivedValues()
                 state.status = .loaded
             }
         } catch {
@@ -66,5 +64,20 @@ final class PortfolioViewModel {
         } catch {
             state.status = .error(error)
         }
+    }
+
+    // MARK: - Private Helpers
+
+    /// Computes total value, asset count, total coins and the largest holding.
+    private func computeDerivedValues() {
+        let totalValue = state.assets.reduce(0.0) { $0 + $1.currentValue }
+        let assetCount = state.assets.count
+        let totalCoins = state.assets.reduce(0.0) { $0 + $1.quantity }
+        let largestHolding = state.assets.max(by: { ($0.currentValue ?? 0.0) < ($1.currentValue ?? 0.0) })
+
+        state.totalValue = totalValue
+        state.assetCount = assetCount
+        state.totalCoins = totalCoins
+        state.largestHolding = largestHolding
     }
 }

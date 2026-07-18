@@ -11,6 +11,10 @@ struct PortfolioState {
     }
 
     var assets: [PortfolioAsset] = []
-    var analytics: PortfolioAnalytics? = nil
+    var totalValue: Double = 0.0
+    var assetCount: Int = 0
+    var totalCoins: Double = 0.0
+    var largestHolding: PortfolioAsset? = nil
+
     var status: Status = .idle
 }
