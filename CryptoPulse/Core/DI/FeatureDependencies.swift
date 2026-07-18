@@ -1,15 +1,3 @@
-//
-//  FeatureDependencies.swift
-//  CryptoPulse
-//
-//  Created by Labhesh Dudi on 15/07/26.
-//
-//
-//import Foundation
-//
-//  FeatureDependencies.swift
-//
-
 import Foundation
 
 struct FeatureDependencies {
@@ -45,15 +33,19 @@ struct FeatureDependencies {
 
         CoinDetailViewModel(
             coinID: coinID,
-            getCoinDetail: appDependencies.getCoinDetailUseCase
+            getCoinDetail: appDependencies.getCoinDetailUseCase,
+            addHoldingUseCase: appDependencies.addHoldingUseCase,
+            updateHoldingUseCase: appDependencies.updateHoldingUseCase,
+            deleteHoldingUseCase: appDependencies.deleteHoldingUseCase,
+            getHoldingUseCase: appDependencies.getHoldingUseCase
         )
     }
     
     func makePortfolioViewModel() -> PortfolioViewModel {
 
         PortfolioViewModel(
-            getPortfolio: appDependencies.getPortfolioUseCase,
-            deleteHolding: appDependencies.deleteHoldingUseCase
+            getPortfolioAssetsUseCase: appDependencies.getPortfolioAssetsUseCase,
+            deleteHoldingUseCase: appDependencies.deleteHoldingUseCase
         )
     }
 

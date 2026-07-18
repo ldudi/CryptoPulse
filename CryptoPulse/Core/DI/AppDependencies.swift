@@ -1,23 +1,3 @@
-//
-//  AppDependencies.swift
-//  CryptoPulse
-//
-//  Created by Labhesh Dudi on 15/07/26.
-//
-//
-//import Foundation
-//
-//  AppDependencies.swift
-//  CryptoPulse
-//
-//  Created by Labhesh Dudi.
-//
-
-//
-//  AppDependencies.swift
-//  CryptoPulse
-//
-
 import Foundation
 
 @MainActor
@@ -54,6 +34,9 @@ final class AppDependencies {
     let deleteHoldingUseCase: DeleteHoldingUseCase
     let getPortfolioUseCase: GetPortfolioUseCase
     let getHoldingUseCase: GetHoldingUseCase
+
+    // New use case for enriched portfolio assets
+    let getPortfolioAssetsUseCase: GetPortfolioAssetsUseCase
 
     // MARK: - Initializer
 
@@ -119,6 +102,12 @@ final class AppDependencies {
             repository: portfolioRepository
         )
 
+        // New use case for enriched assets
+        let getPortfolioAssetsUseCase = GetPortfolioAssetsUseCase(
+            portfolioRepository: portfolioRepository,
+            coinRepository: coinRepository
+        )
+
         // MARK: Assign
 
         self.logger = logger
@@ -136,6 +125,7 @@ final class AppDependencies {
         self.deleteHoldingUseCase = deleteHoldingUseCase
         self.getPortfolioUseCase = getPortfolioUseCase
         self.getHoldingUseCase = getHoldingUseCase
+        self.getPortfolioAssetsUseCase = getPortfolioAssetsUseCase
     }
 }
 
@@ -144,43 +134,30 @@ final class AppDependencies {
 private extension AppDependencies {
 
     static func makeAPIClient() -> APIClient {
-
         URLSessionAPIClient()
     }
 
     static func makeCoinRemoteDataSource(
         apiClient: APIClient
     ) -> CoinRemoteDataSource {
-
-        CoinRemoteDataSourceImpl(
-            apiClient: apiClient
-        )
+        CoinRemoteDataSourceImpl(apiClient: apiClient)
     }
 
     static func makeCoinRepository(
         remoteDataSource: CoinRemoteDataSource
     ) -> CoinRepository {
-
-        CoinRepositoryImpl(
-            remoteDataSource: remoteDataSource
-        )
+        CoinRepositoryImpl(remoteDataSource: remoteDataSource)
     }
 
     static func makeGetMarketCoinsUseCase(
         repository: CoinRepository
     ) -> GetMarketCoinsUseCase {
-
-        GetMarketCoinsUseCase(
-            repository: repository
-        )
+        GetMarketCoinsUseCase(repository: repository)
     }
 
     static func makeGetCoinDetailUseCase(
         repository: CoinRepository
     ) -> GetCoinDetailUseCase {
-
-        GetCoinDetailUseCase(
-            repository: repository
-        )
+        GetCoinDetailUseCase(repository: repository)
     }
 }
