@@ -44,8 +44,8 @@ struct FeatureDependencies {
     func makePortfolioViewModel() -> PortfolioViewModel {
 
         PortfolioViewModel(
-            getPortfolio: appDependencies.getPortfolioUseCase,
-            deleteHolding: appDependencies.deleteHoldingUseCase
+            getPortfolioAssetsUseCase: appDependencies.getPortfolioAssetsUseCase,
+            deleteHoldingUseCase: appDependencies.deleteHoldingUseCase
         )
     }
 

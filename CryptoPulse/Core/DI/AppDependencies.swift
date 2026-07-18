@@ -35,6 +35,9 @@ final class AppDependencies {
     let getPortfolioUseCase: GetPortfolioUseCase
     let getHoldingUseCase: GetHoldingUseCase
 
+    // New use case for enriched portfolio assets
+    let getPortfolioAssetsUseCase: GetPortfolioAssetsUseCase
+
     // MARK: - Initializer
 
     init(
@@ -99,6 +102,12 @@ final class AppDependencies {
             repository: portfolioRepository
         )
 
+        // New use case for enriched assets
+        let getPortfolioAssetsUseCase = GetPortfolioAssetsUseCase(
+            portfolioRepository: portfolioRepository,
+            coinRepository: coinRepository
+        )
+
         // MARK: Assign
 
         self.logger = logger
@@ -116,6 +125,7 @@ final class AppDependencies {
         self.deleteHoldingUseCase = deleteHoldingUseCase
         self.getPortfolioUseCase = getPortfolioUseCase
         self.getHoldingUseCase = getHoldingUseCase
+        self.getPortfolioAssetsUseCase = getPortfolioAssetsUseCase
     }
 }
 
