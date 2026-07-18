@@ -1,73 +1,51 @@
 import Foundation
+import Observation
 
 @Observable
 final class AppCoordinator {
-    
-    // MARK: - Dependencies
-    
-    private let diContainer: DIContainer
-    
-    // MARK: - State
-    
-    var selectedTab: TabSelection = .market
-    
-    // MARK: - Init
-    
-    init(diContainer: DIContainer) {
-        self.diContainer = diContainer
-    }
-    
-    // MARK: - Public API
-    
-    func start() {
-        // Navigation will be handled by the tab view
-    }
-    
-    func selectTab(_ tab: TabSelection) {
-        selectedTab = tab
-    }
-    
-    // MARK: - Navigation Methods
-    
-    func navigateToMarket() {
-        // Implementation for market navigation
-    }
-    
-    func navigateToPortfolio() {
-        // Implementation for portfolio navigation
-    }
-    
-    func navigateToSettings() {
-        // Implementation for settings navigation
-    }
-}
 
-// MARK: - TabSelection
+    // MARK: - Navigation State
 
-enum TabSelection: String, CaseIterable, Sendable {
-    case market
-    case portfolio
-    case settings
-    
-    var title: String {
-        switch self {
-        case .market:
-            return "Market"
-        case .portfolio:
-            return "Portfolio"
-        case .settings:
-            return "Settings"
-        }
+    var root: Route = .launch
+    var path: [Route] = []
+
+    // MARK: - Routes
+
+    enum Route: Hashable {
+        case launch
+        case splash
+        case home
+        case coinDetail(String)
+        case portfolio
     }
+
+    // MARK: - Root Navigation
+
+    func setRoot(_ route: Route) {
+        root = route
+        path.removeAll()
+    }
+
+    // MARK: - Stack Navigation
     
-    var systemImage: String {
-        switch self {
-        case .market:
-            return "chart.line.uptrend.xyaxis"
-        case .portfolio:
-            return "briefcase"
-        case .settings:
-            return "gear"
-        }
+    func showSplash() {
+        root = .splash
+    }
+
+    func showHome() {
+        root = .home
+    }
+
+    func navigate(to route: Route) {
+        path.append(route)
+    }
+
+    func pop() {
+        guard !path.isEmpty else { return }
+        path.removeLast()
+    }
+
+    func popToRoot() {
+        path.removeAll()
     }
 }

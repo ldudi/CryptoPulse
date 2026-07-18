@@ -1,12 +1,3 @@
-//
-//  RootView.swift
-//
-
-//
-//  RootView.swift
-//  CryptoPulse
-//
-
 import SwiftUI
 import Observation
 
@@ -17,12 +8,10 @@ struct RootView: View {
 
     var body: some View {
 
-        @Bindable var coordinator = container.coordinator
+        @Bindable var coordinator = container.appCoordinator
 
         NavigationStack(path: $coordinator.path) {
-
             rootDestination
-
                 .navigationDestination(
                     for: AppCoordinator.Route.self
                 ) { route in
@@ -30,35 +19,27 @@ struct RootView: View {
                     switch route {
 
                     case .launch:
-
                         LaunchView()
 
                     case .splash:
-
                         SplashView()
 
                     case .home:
-
                         MarketView(
-                            viewModel: container.features.makeMarketViewModel()
+                            viewModel: container.featureDependencies.makeMarketViewModel()
                         )
 
                     case .coinDetail(let coinID):
-
                         CoinDetailView(
-
-                            viewModel:
-                                container.features.makeCoinDetailViewModel(
-                                    coinID: coinID
-                                )
+                            viewModel: container.featureDependencies.makeCoinDetailViewModel(
+                                coinID: coinID
+                            )
                         )
-                        
+
                     case .portfolio:
-
                         PortfolioView(
-                            viewModel: container.features.makePortfolioViewModel()
+                            viewModel: container.featureDependencies.makePortfolioViewModel()
                         )
-                        
                     }
                 }
         }
@@ -67,46 +48,30 @@ struct RootView: View {
     @ViewBuilder
     private var rootDestination: some View {
 
-        switch container.coordinator.root {
+        switch container.appCoordinator.root {
 
         case .launch:
-
             LaunchView()
 
         case .splash:
-
             SplashView()
 
         case .home:
-
             MarketView(
-                viewModel: container.features.makeMarketViewModel()
+                viewModel: container.featureDependencies.makeMarketViewModel()
             )
 
         case .coinDetail(let coinID):
-
             CoinDetailView(
-
-                viewModel:
-                    container.features.makeCoinDetailViewModel(
-                        coinID: coinID
-                    )
+                viewModel: container.featureDependencies.makeCoinDetailViewModel(
+                    coinID: coinID
+                )
             )
-            
+
         case .portfolio:
-
             PortfolioView(
-                viewModel: container.features.makePortfolioViewModel()
+                viewModel: container.featureDependencies.makePortfolioViewModel()
             )
-            
         }
     }
 }
-//
-//  RootView.swift
-//  CryptoPulse
-//
-//  Created by Labhesh Dudi on 15/07/26.
-//
-//
-//import Foundation

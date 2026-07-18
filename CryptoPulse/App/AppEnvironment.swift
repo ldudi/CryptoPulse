@@ -1,8 +1,3 @@
-//
-//  AppEnvironment.swift
-//  CryptoPulse
-//
-
 import Foundation
 
 enum AppEnvironment: String, CaseIterable {
@@ -53,11 +48,3 @@ enum AppEnvironment: String, CaseIterable {
         self != .production
     }
 }
-////
-////  AppEnvironment.swift
-////  CryptoPulse
-////
-////  Created by Labhesh Dudi on 15/07/26.
-////
-//
-//import Foundation

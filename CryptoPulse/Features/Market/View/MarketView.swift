@@ -1,55 +1,55 @@
-//
-//  MarketView.swift
-//  CryptoPulse
-//
-//  Created by Labhesh Dudi on 17/07/26.
-//
-//
-//import Foundation
-//
-//
-//  MarketView.swift
-//  CryptoPulse
-//
-
 import SwiftUI
 
 struct MarketView: View {
 
-    @Environment(DIContainer.self)
-    private var container
-
     @State
     private var viewModel: MarketViewModel
 
-    init(
-        viewModel: MarketViewModel
-    ) {
-        _viewModel = State(
-            initialValue: viewModel
-        )
+    init(viewModel: MarketViewModel) {
+        _viewModel = State(initialValue: viewModel)
     }
 
     var body: some View {
+        NavigationStack {
+            Group {
+                switch viewModel.state {
 
-        MarketContentView(
-            viewModel: viewModel,
-            onSelectCoin: { coin in
+                case .idle:
+                    Color.clear
 
-                container.coordinator.push(
-                    .coinDetail(coin.id)
-                )
+                case .loading:
+                    ProgressView()
+
+                case .empty:
+                    ContentUnavailableView(
+                        "No Coins",
+                        systemImage: "bitcoinsign.circle",
+                        description: Text("No cryptocurrencies were found.")
+                    )
+
+                case .failed(let error):
+                    ContentUnavailableView(
+                        "Something went wrong",
+                        systemImage: "exclamationmark.triangle",
+                        description: Text(error.localizedDescription)
+                    )
+
+                case .loaded:
+                    List(viewModel.displayedCoins) { coin in
+                        CoinRowView(coin: coin)
+                    }
+                    .listStyle(.plain)
+                }
             }
-        )
-        .onAppear {
-
-            guard !viewModel.hasContent else {
-                return
+            .navigationTitle("Market")
+            .searchable(text: $viewModel.searchText)
+            .refreshable {
+                await viewModel.refresh()
             }
-
-            Task {
-
-                await viewModel.loadMarkets()
+            .task {
+                if case .idle = viewModel.state {
+                    await viewModel.loadMarkets()
+                }
             }
         }
     }

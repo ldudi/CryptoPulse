@@ -1,44 +1,33 @@
-//
-//  PortfolioHoldingEntity.swift
-//  CryptoPulse
-//
-//  Created by Labhesh Dudi on 18/07/26.
-//
-//
-//import Foundation
-//
-//  PortfolioHoldingEntity.swift
-//  CryptoPulse
-//
-
 import Foundation
 import SwiftData
 
 @Model
 final class PortfolioHoldingEntity {
-
-    @Attribute(.unique)
+    
+    // MARK: - Properties
+    
     var coinID: String
-
     var symbol: String
-
     var name: String
-
     var imageURL: String?
-
     var quantity: Double
-
+    var averageBuyPrice: Double  // New property for tracking buy price
+    
+    // MARK: - Init
+    
     init(
         coinID: String,
         symbol: String,
         name: String,
         imageURL: String?,
-        quantity: Double
+        quantity: Double,
+        averageBuyPrice: Double = 0.0  // Default to 0.0 for existing holdings
     ) {
         self.coinID = coinID
         self.symbol = symbol
         self.name = name
         self.imageURL = imageURL
         self.quantity = quantity
+        self.averageBuyPrice = averageBuyPrice
     }
 }

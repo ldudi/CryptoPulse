@@ -59,11 +59,22 @@ final class GetPortfolioAssetsUseCase {
             coinDict[coin.id] = coin
         }
 
-        // 5️⃣ Combine holdings with the corresponding market data.
+        // 5️⃣ Combine holdings with the corresponding market data and calculate allocation percentages.
         var assets: [PortfolioAsset] = []
+        var totalValue = 0.0
+        
+        // First pass: calculate total portfolio value
         for holding in holdings {
             if let coin = coinDict[holding.coinID] {
-                let asset = PortfolioAsset(holding: holding, coin: coin)
+                totalValue += coin.currentPrice * holding.quantity
+            }
+        }
+        
+        // Second pass: create assets with allocation percentages
+        for holding in holdings {
+            if let coin = coinDict[holding.coinID] {
+                let allocationPercentage = totalValue > 0 ? (coin.currentPrice * holding.quantity) / totalValue * 100 : 0.0
+                let asset = PortfolioAsset(holding: holding, coin: coin, allocationPercentage: allocationPercentage)
                 assets.append(asset)
             } else {
                 // Market data missing – skip this holding.  No placeholder is created.
@@ -71,6 +82,9 @@ final class GetPortfolioAssetsUseCase {
             }
         }
 
+        // Sort assets by currentValue (descending)
+        assets.sort { $0.currentValue > $1.currentValue }
+        
         return assets
     }
 }

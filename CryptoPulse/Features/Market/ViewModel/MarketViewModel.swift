@@ -1,16 +1,3 @@
-//
-//  MarketViewModel.swift
-//  CryptoPulse
-//
-//  Created by Labhesh Dudi on 17/07/26.
-//
-//
-//  MarketViewState.swift
-//  CryptoPulse
-//
-//  Created by Labhesh Dudi.
-//
-
 import Foundation
 import Observation
 

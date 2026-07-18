@@ -2,31 +2,22 @@ import Foundation
 
 struct FeatureDependencies {
 
-    // MARK: - Core
-
     let appDependencies: AppDependencies
-
-    // MARK: - Configuration
 
     var configuration: AppConfiguration {
         appDependencies.configuration
     }
 
-    // MARK: - Logging
-
     var logger: AppLogger {
         appDependencies.logger
     }
 
-    // MARK: - Market
-
     func makeMarketViewModel() -> MarketViewModel {
-
         MarketViewModel(
             getMarketCoins: appDependencies.getMarketCoinsUseCase
         )
     }
-    
+
     func makeCoinDetailViewModel(
         coinID: String
     ) -> CoinDetailViewModel {
@@ -40,15 +31,11 @@ struct FeatureDependencies {
             getHoldingUseCase: appDependencies.getHoldingUseCase
         )
     }
-    
-    func makePortfolioViewModel() -> PortfolioViewModel {
 
+    func makePortfolioViewModel() -> PortfolioViewModel {
         PortfolioViewModel(
             getPortfolioAssetsUseCase: appDependencies.getPortfolioAssetsUseCase,
             deleteHoldingUseCase: appDependencies.deleteHoldingUseCase
         )
     }
-
-    // MARK: - Future Features
-    // func makeFavoritesViewModel(...)
 }

@@ -1,14 +1,3 @@
-//
-//  PortfolioRepository.swift
-//  CryptoPulse
-//
-//  Created by Labhesh Dudi on 18/07/26.
-//
-//
-//  PortfolioRepository.swift
-//  CryptoPulse
-//
-
 import Foundation
 
 protocol PortfolioRepository: Sendable {

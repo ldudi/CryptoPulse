@@ -10,29 +10,10 @@ struct LaunchView: View {
     private var container
 
     var body: some View {
-
         ProgressView()
-
             .task {
-
-                try? await Task.sleep(
-                    for: .seconds(1)
-                )
-
-                container.coordinator.showSplash()
+                try? await Task.sleep(for: .seconds(1))
+                container.appCoordinator.setRoot(.splash)
             }
     }
 }
-
-#Preview {
-
-    LaunchView()
-}
-//
-//  LaunchView.swift
-//  CryptoPulse
-//
-//  Created by Labhesh Dudi on 15/07/26.
-//
-//
-//import Foundation

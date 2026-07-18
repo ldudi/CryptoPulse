@@ -30,7 +30,7 @@ struct SplashView: View {
                 for: .seconds(2)
             )
 
-            container.coordinator.showHome()
+            container.appCoordinator.showHome()
         }
     }
 }
