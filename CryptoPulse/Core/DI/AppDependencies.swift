@@ -51,80 +51,74 @@ final class AppDependencies {
         // MARK: Core
 
         let logger = LoggerFactory.makeLogger(category: .app)
+        self.logger = logger
 
         // MARK: Networking
 
         let apiClient = Self.makeAPIClient()
+        self.apiClient = apiClient
 
         // MARK: Data Sources
 
         let coinRemoteDataSource = Self.makeCoinRemoteDataSource(
             apiClient: apiClient
         )
+        self.coinRemoteDataSource = coinRemoteDataSource
 
         // MARK: Repositories
 
         let coinRepository = Self.makeCoinRepository(
             remoteDataSource: coinRemoteDataSource
         )
+        self.coinRepository = coinRepository
 
         let portfolioRepository = PortfolioRepositoryImpl(
             persistence: persistence
         )
+        self.portfolioRepository = portfolioRepository
 
         // MARK: Use Cases
 
         let getMarketCoinsUseCase = Self.makeGetMarketCoinsUseCase(
             repository: coinRepository
         )
+        self.getMarketCoinsUseCase = getMarketCoinsUseCase
 
         let getCoinDetailUseCase = Self.makeGetCoinDetailUseCase(
             repository: coinRepository
         )
+        self.getCoinDetailUseCase = getCoinDetailUseCase
 
         let addHoldingUseCase = AddHoldingUseCase(
             repository: portfolioRepository
         )
+        self.addHoldingUseCase = addHoldingUseCase
 
         let updateHoldingUseCase = UpdateHoldingUseCase(
             repository: portfolioRepository
         )
+        self.updateHoldingUseCase = updateHoldingUseCase
 
         let deleteHoldingUseCase = DeleteHoldingUseCase(
             repository: portfolioRepository
         )
+        self.deleteHoldingUseCase = deleteHoldingUseCase
 
         let getPortfolioUseCase = GetPortfolioUseCase(
             repository: portfolioRepository
         )
+        self.getPortfolioUseCase = getPortfolioUseCase
 
         let getHoldingUseCase = GetHoldingUseCase(
             repository: portfolioRepository
         )
+        self.getHoldingUseCase = getHoldingUseCase
 
         // New use case for enriched assets
         let getPortfolioAssetsUseCase = GetPortfolioAssetsUseCase(
             portfolioRepository: portfolioRepository,
             coinRepository: coinRepository
         )
-
-        // MARK: Assign
-
-        self.logger = logger
-        self.apiClient = apiClient
-        self.coinRemoteDataSource = coinRemoteDataSource
-
-        self.coinRepository = coinRepository
-        self.portfolioRepository = portfolioRepository
-
-        self.getMarketCoinsUseCase = getMarketCoinsUseCase
-        self.getCoinDetailUseCase = getCoinDetailUseCase
-
-        self.addHoldingUseCase = addHoldingUseCase
-        self.updateHoldingUseCase = updateHoldingUseCase
-        self.deleteHoldingUseCase = deleteHoldingUseCase
-        self.getPortfolioUseCase = getPortfolioUseCase
-        self.getHoldingUseCase = getHoldingUseCase
         self.getPortfolioAssetsUseCase = getPortfolioAssetsUseCase
     }
 }

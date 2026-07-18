@@ -26,6 +26,20 @@ final class AppCoordinator {
     func selectTab(_ tab: TabSelection) {
         selectedTab = tab
     }
+    
+    // MARK: - Navigation Methods
+    
+    func navigateToMarket() {
+        // Implementation for market navigation
+    }
+    
+    func navigateToPortfolio() {
+        // Implementation for portfolio navigation
+    }
+    
+    func navigateToSettings() {
+        // Implementation for settings navigation
+    }
 }
 
 // MARK: - TabSelection
