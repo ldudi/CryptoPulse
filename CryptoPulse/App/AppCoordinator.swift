@@ -1,56 +1,59 @@
-import Observation
+import Foundation
 
 @Observable
 final class AppCoordinator {
-
-    enum Route: Hashable {
-
-        case launch
-        case splash
-        case home
-
-        case coinDetail(String)
-
-        case portfolio
+    
+    // MARK: - Dependencies
+    
+    private let diContainer: DIContainer
+    
+    // MARK: - State
+    
+    var selectedTab: TabSelection = .market
+    
+    // MARK: - Init
+    
+    init(diContainer: DIContainer) {
+        self.diContainer = diContainer
     }
-
-    // MARK: - Navigation
-
-    var path: [Route] = []
-
-    var root: Route = .launch
-
-    // MARK: - Root Navigation
-
-    func showHome() {
-        root = .home
+    
+    // MARK: - Public API
+    
+    func start() {
+        // Navigation will be handled by the tab view
     }
-
-    func showSplash() {
-        root = .splash
+    
+    func selectTab(_ tab: TabSelection) {
+        selectedTab = tab
     }
+}
 
-    func showPortfolio() {
-        root = .portfolio
+// MARK: - TabSelection
+
+enum TabSelection: String, CaseIterable, Sendable {
+    case market
+    case portfolio
+    case settings
+    
+    var title: String {
+        switch self {
+        case .market:
+            return "Market"
+        case .portfolio:
+            return "Portfolio"
+        case .settings:
+            return "Settings"
+        }
     }
-
-    // MARK: - Stack Navigation
-
-    func push(_ route: Route) {
-        path.append(route)
-    }
-
-    func pop() {
-        guard !path.isEmpty else { return }
-        path.removeLast()
-    }
-
-    func popToRoot() {
-        path.removeAll()
-    }
-
-    func reset() {
-        root = .launch
-        path.removeAll()
+    
+    var systemImage: String {
+        switch self {
+        case .market:
+            return "chart.line.uptrend.xyaxis"
+        case .portfolio:
+            return "briefcase"
+        case .settings:
+            return "gear"
+        }
     }
 }
