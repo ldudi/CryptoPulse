@@ -11,34 +11,22 @@ struct RootView: View {
         @Bindable var coordinator = container.appCoordinator
 
         NavigationStack(path: $coordinator.path) {
+
             rootDestination
+
                 .navigationDestination(
                     for: AppCoordinator.Route.self
                 ) { route in
 
                     switch route {
 
-                    case .launch:
-                        LaunchView()
+                    case .coinDetail(let id):
 
-                    case .splash:
-                        SplashView()
-
-                    case .home:
-                        MarketView(
-                            viewModel: container.featureDependencies.makeMarketViewModel()
-                        )
-
-                    case .coinDetail(let coinID):
                         CoinDetailView(
-                            viewModel: container.featureDependencies.makeCoinDetailViewModel(
-                                coinID: coinID
-                            )
-                        )
-
-                    case .portfolio:
-                        PortfolioView(
-                            viewModel: container.featureDependencies.makePortfolioViewModel()
+                            viewModel: container.featureDependencies
+                                .makeCoinDetailViewModel(
+                                    coinID: id
+                                )
                         )
                     }
                 }
@@ -56,22 +44,8 @@ struct RootView: View {
         case .splash:
             SplashView()
 
-        case .home:
-            MarketView(
-                viewModel: container.featureDependencies.makeMarketViewModel()
-            )
-
-        case .coinDetail(let coinID):
-            CoinDetailView(
-                viewModel: container.featureDependencies.makeCoinDetailViewModel(
-                    coinID: coinID
-                )
-            )
-
-        case .portfolio:
-            PortfolioView(
-                viewModel: container.featureDependencies.makePortfolioViewModel()
-            )
+        case .tabs:
+            MainTabView()
         }
     }
 }

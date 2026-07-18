@@ -2,6 +2,9 @@ import SwiftUI
 
 struct MarketView: View {
 
+    @Environment(DIContainer.self)
+    private var container
+
     @State
     private var viewModel: MarketViewModel
 
@@ -10,46 +13,66 @@ struct MarketView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            Group {
-                switch viewModel.state {
 
-                case .idle:
-                    Color.clear
+        Group {
 
-                case .loading:
-                    ProgressView()
+            switch viewModel.state {
 
-                case .empty:
-                    ContentUnavailableView(
-                        "No Coins",
-                        systemImage: "bitcoinsign.circle",
-                        description: Text("No cryptocurrencies were found.")
+            case .idle:
+                Color.clear
+
+            case .loading:
+                ProgressView()
+
+            case .empty:
+                ContentUnavailableView(
+                    "No Coins",
+                    systemImage: "bitcoinsign.circle",
+                    description: Text(
+                        "No cryptocurrencies were found."
                     )
+                )
 
-                case .failed(let error):
-                    ContentUnavailableView(
-                        "Something went wrong",
-                        systemImage: "exclamationmark.triangle",
-                        description: Text(error.localizedDescription)
+            case .failed(let error):
+                ContentUnavailableView(
+                    "Something went wrong",
+                    systemImage: "exclamationmark.triangle",
+                    description: Text(
+                        error.localizedDescription
                     )
+                )
 
-                case .loaded:
-                    List(viewModel.displayedCoins) { coin in
-                        CoinRowView(coin: coin)
+            case .loaded:
+
+                List(viewModel.displayedCoins) { coin in
+
+                    Button {
+
+                        container.appCoordinator.navigate(
+                            to: .coinDetail(coin.id)
+                        )
+
+                    } label: {
+
+                        CoinRowView(
+                            coin: coin
+                        )
                     }
-                    .listStyle(.plain)
+                    .buttonStyle(.plain)
                 }
             }
-            .navigationTitle("Market")
-            .searchable(text: $viewModel.searchText)
-            .refreshable {
-                await viewModel.refresh()
-            }
-            .task {
-                if case .idle = viewModel.state {
-                    await viewModel.loadMarkets()
-                }
+        }
+        .navigationTitle("Market")
+        .searchable(
+            text: $viewModel.searchText
+        )
+        .refreshable {
+            await viewModel.refresh()
+        }
+        .task {
+
+            if case .idle = viewModel.state {
+                await viewModel.loadMarkets()
             }
         }
     }

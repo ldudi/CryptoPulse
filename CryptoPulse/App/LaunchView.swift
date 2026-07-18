@@ -1,7 +1,3 @@
-//
-//  LaunchView.swift
-//
-
 import SwiftUI
 
 struct LaunchView: View {
@@ -13,7 +9,7 @@ struct LaunchView: View {
         ProgressView()
             .task {
                 try? await Task.sleep(for: .seconds(1))
-                container.appCoordinator.setRoot(.splash)
+                container.appCoordinator.showSplash()
             }
     }
 }
