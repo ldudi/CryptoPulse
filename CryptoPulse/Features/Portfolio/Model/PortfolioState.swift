@@ -1,7 +1,7 @@
 import Foundation
 
 /// Holds the UI state for the portfolio screen.
-struct PortfolioViewState {
+struct PortfolioState {
     enum Status {
         case idle
         case loading

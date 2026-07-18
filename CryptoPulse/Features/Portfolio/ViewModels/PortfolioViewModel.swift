@@ -4,85 +4,91 @@ import Observation
 @MainActor
 @Observable
 final class PortfolioViewModel {
-    
+
     // MARK: - State
-    
+
     private(set) var state: PortfolioViewState = .idle
-    
+
     // MARK: - Dependencies
-    
-    private let getPortfolioUseCase: GetPortfolioUseCase
+
+    private let getPortfolioAssetsUseCase: GetPortfolioAssetsUseCase
     private let deleteHoldingUseCase: DeleteHoldingUseCase
-    
-    // MARK: - Init
-    
+
+    // MARK: - Initializer
+
     init(
-        getPortfolioUseCase: GetPortfolioUseCase,
+        getPortfolioAssetsUseCase: GetPortfolioAssetsUseCase,
         deleteHoldingUseCase: DeleteHoldingUseCase
     ) {
-        self.getPortfolioUseCase = getPortfolioUseCase
+        self.getPortfolioAssetsUseCase = getPortfolioAssetsUseCase
         self.deleteHoldingUseCase = deleteHoldingUseCase
     }
-    
+
     // MARK: - Computed Properties
-    
-    var holdings: [PortfolioHolding] {
-        guard case let .loaded(holdings) = state else { return [] }
-        return holdings
+
+    var assets: [PortfolioAsset] {
+        guard case let .loaded(assets) = state else {
+            return []
+        }
+        return assets
     }
-    
+
     var isLoading: Bool {
-        if case .loading = state { return true }
+        if case .loading = state {
+            return true
+        }
         return false
     }
-    
+
     var isEmpty: Bool {
-        if case .empty = state { return true }
+        if case .empty = state {
+            return true
+        }
         return false
     }
-    
+
     var error: Error? {
-        guard case let .failed(error) = state else { return nil }
+        guard case let .failed(error) = state else {
+            return nil
+        }
         return error
     }
-    
-    // MARK: - Actions
-    
-    /// Load the portfolio data if not already loaded.
+
+    // MARK: - Public Methods
+
+    /// Loads the portfolio only once.
     func loadPortfolio() async {
         guard case .idle = state else { return }
         await fetchPortfolio()
     }
-    
-    /// Refresh the portfolio data regardless of current state.
+
+    /// Forces a refresh.
     func refresh() async {
         await fetchPortfolio()
     }
-    
-    /// Delete a holding by coin ID.
+
+    /// Deletes a holding and refreshes the portfolio.
     func deleteHolding(coinID: String) async {
         do {
             try await deleteHoldingUseCase.execute(coinID: coinID)
-            // After successful deletion, reload the portfolio
             await fetchPortfolio()
         } catch {
-            // Error handling is done through state changes in fetchPortfolio
+            state = .failed(error)
         }
     }
-    
-    // MARK: - Private
-    
-    /// Fetch portfolio data from the use case.
+
+    // MARK: - Private Methods
+
     private func fetchPortfolio() async {
         state = .loading
-        
+
         do {
-            let holdings = try await getPortfolioUseCase.execute()
-            
-            if holdings.isEmpty {
+            let assets = try await getPortfolioAssetsUseCase.execute()
+
+            if assets.isEmpty {
                 state = .empty
             } else {
-                state = .loaded(holdings)
+                state = .loaded(assets)
             }
         } catch {
             state = .failed(error)

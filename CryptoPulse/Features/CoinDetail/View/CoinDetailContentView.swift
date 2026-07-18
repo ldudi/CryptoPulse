@@ -1,11 +1,3 @@
-//
-//  CoinDetailContentView.swift
-//  CryptoPulse
-//
-//  Created by Labhesh Dudi on 17/07/26.
-//
-//
-//import Foundation
 import SwiftUI
 
 struct CoinDetailContentView: View {
@@ -33,9 +25,7 @@ struct CoinDetailContentView: View {
                     title: "Unable to load coin",
                     message: error.localizedDescription
                 ) {
-
                     Task {
-
                         await viewModel.refresh()
                     }
                 }
@@ -43,7 +33,8 @@ struct CoinDetailContentView: View {
             case .loaded(let coin):
 
                 CoinDetailLoadedView(
-                    coin: coin
+                    coin: coin,
+                    viewModel: viewModel
                 )
             }
         }

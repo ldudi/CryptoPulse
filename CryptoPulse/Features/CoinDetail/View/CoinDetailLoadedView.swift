@@ -1,103 +1,83 @@
-//
-//  CoinDetailLoadedView.swift
-//  CryptoPulse
-//
-//  Created by Labhesh Dudi on 17/07/26.
-//
-//
-//import Foundation
 import SwiftUI
 
 struct CoinDetailLoadedView: View {
 
     let coin: CoinDetail
 
+    @Bindable
+    var viewModel: CoinDetailViewModel
+
+    @State
+    private var isShowingDeleteConfirmation = false
+
     var body: some View {
-
         ScrollView {
+            VStack(spacing: Spacing.large) {
 
-            VStack(
-                spacing: Spacing.large
-            ) {
-
-                RemoteImageView(
-                    url: coin.imageURL
-                )
-                .frame(
-                    width: 80,
-                    height: 80
+                CoinDetailHeaderView(
+                    coin: coin
                 )
 
-                VStack(
-                    spacing: Spacing.small
-                ) {
+                CoinPriceCardView(
+                    coin: coin
+                )
 
-                    Text(
-                        coin.name
-                    )
-                    .font(
-                        .title
-                    )
-
-                    Text(
-                        coin.symbol.uppercased()
-                    )
-                    .foregroundStyle(
-                        .secondary
+                if let holding = viewModel.currentHolding {
+                    CurrentHoldingView(
+                        holding: holding
                     )
                 }
 
-                CoinStatCard(
-                    title: "Current Price",
-                    value: coin.currentPrice.formatted(.currency(code: "USD"))
-                )
+                VStack(spacing: Spacing.medium) {
 
-                CoinStatCard(
-                    title: "Market Cap",
-                    value: coin.marketCap.formatted()
-                )
-
-                CoinStatCard(
-                    title: "Volume",
-                    value: coin.volume.formatted()
-                )
-
-                CoinStatCard(
-                    title: "24h High",
-                    value: coin.high24h.formatted(.currency(code: "USD"))
-                )
-
-                CoinStatCard(
-                    title: "24h Low",
-                    value: coin.low24h.formatted(.currency(code: "USD"))
-                )
-
-                CoinStatCard(
-                    title: "24h Change",
-                    value: "\(coin.priceChange24h.formatted())%"
-                )
-
-                if !coin.description.isEmpty {
-
-                    VStack(
-                        alignment: .leading,
-                        spacing: Spacing.small
-                    ) {
-
-                        Text("Description")
-                            .font(.headline)
-
-                        Text(
-                            coin.description
+                    Button {
+                        viewModel.showEditor()
+                    } label: {
+                        Label(
+                            viewModel.currentHolding == nil
+                                ? "Add Holding"
+                                : "Edit Holding",
+                            systemImage: viewModel.currentHolding == nil
+                                ? "plus.circle.fill"
+                                : "pencil.circle.fill"
                         )
+                        .frame(maxWidth: .infinity)
                     }
-                    .frame(
-                        maxWidth: .infinity,
-                        alignment: .leading
-                    )
+                    .buttonStyle(.borderedProminent)
+                    .disabled(viewModel.isSaving)
+
+                    if viewModel.currentHolding != nil {
+
+                        Button(role: .destructive) {
+                            isShowingDeleteConfirmation = true
+                        } label: {
+                            Label(
+                                "Delete Holding",
+                                systemImage: "trash"
+                            )
+                            .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.bordered)
+                        .disabled(viewModel.isSaving)
+                    }
                 }
             }
             .padding()
+        }
+        .confirmationDialog(
+            "Delete Holding?",
+            isPresented: $isShowingDeleteConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button("Delete", role: .destructive) {
+                Task {
+                    await viewModel.deleteHolding()
+                }
+            }
+
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("This will permanently remove this holding from your portfolio.")
         }
     }
 }
