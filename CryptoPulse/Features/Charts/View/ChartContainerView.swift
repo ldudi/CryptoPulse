@@ -2,15 +2,15 @@ import SwiftUI
 import Charts
 
 struct ChartContainerView: View {
-    @State private var viewModel: ChartViewModel
+    @ObservedObject var viewModel: ChartViewModel
     @State private var isDragging = false
     
     init(viewModel: ChartViewModel) {
-        _viewModel = State(initialValue: viewModel)
+        self.viewModel = viewModel
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: Spacing.small) {
+        VStack(alignment: .leading, spacing: 12) {
             // Price header
             SelectedPriceView(
                 isDragging: isDragging,
@@ -60,7 +60,7 @@ struct ChartContainerView: View {
                 }
             )
         }
-        .padding(.horizontal, Spacing.medium)
+        .padding(.horizontal, 16)
         .task {
             await viewModel.loadChart()
         }
