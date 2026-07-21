@@ -80,7 +80,7 @@ struct ChartView: View {
                     x: .value("Selected Date", selected.date),
                     y: .value("Price", selected.price)
                 )
-                .foregroundStyle(.accentColor)
+                .foregroundStyle(AppColors.accent)
                 .symbolSize(100)
             }
         }
@@ -101,7 +101,7 @@ struct ChartView: View {
                     .gesture(
                         DragGesture(minimumDistance: 0)
                             .onChanged { value in
-                                let date = proxy.value(atX: value.location.x)
+                                let date = proxy.value(atX: value.location.x, as: Date.self)
                                 if let date = date {
                                     viewModel.handleDrag(date: date)
                                 }

@@ -2,12 +2,12 @@ import SwiftUI
 import Charts
 
 struct ChartContainerView: View {
-    @ObservedObject var viewModel: ChartViewModel
+    @Bindable var viewModel: ChartViewModel
     @State private var isDragging = false
     
-    init(viewModel: ChartViewModel) {
-        self.viewModel = viewModel
-    }
+//    init(viewModel: ChartViewModel) {
+//        self.viewModel = viewModel
+//    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -35,6 +35,15 @@ struct ChartContainerView: View {
                 } else if viewModel.chartDataPoints.isEmpty {
                     ChartEmptyView()
                 } else {
+//                    PriceChartView(
+//                        dataPoints: viewModel.chartDataPoints,
+//                        selectedPoint: Binding(
+//                            get: { viewModel.selectedPoint },
+//                            set: { viewModel.selectedPoint = $0 }
+//                        ),
+//                        isDragging: $isDragging
+//                    )
+//                    .frame(minHeight: 200)
                     PriceChartView(
                         dataPoints: viewModel.chartDataPoints,
                         selectedPoint: $viewModel.selectedPoint,

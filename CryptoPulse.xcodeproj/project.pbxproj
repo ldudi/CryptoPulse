@@ -35,7 +35,6 @@
 			membershipExceptions = (
 				Tests/Mocks/MockAPIClient.swift,
 				Tests/Mocks/MockCacheStore.swift,
-				Tests/Mocks/MockCoinRepository.swift,
 				Tests/Mocks/MockLogger.swift,
 				Tests/Mocks/MockPortfolioRepository.swift,
 				Tests/Models/CoinTests.swift,
@@ -56,7 +55,6 @@
 			membershipExceptions = (
 				Tests/Mocks/MockAPIClient.swift,
 				Tests/Mocks/MockCacheStore.swift,
-				Tests/Mocks/MockCoinRepository.swift,
 				Tests/Mocks/MockLogger.swift,
 				Tests/Mocks/MockPortfolioRepository.swift,
 				Tests/Models/CoinTests.swift,

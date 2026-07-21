@@ -37,11 +37,11 @@ struct PriceChartView: View {
                     .foregroundStyle(Color.secondary.opacity(0.1))
                 AxisTick()
             }
-            .chartYAxisLabel(position: .leading) {
-                Text("Price")
-                    .font(Typography.caption)
-                    .foregroundStyle(Color.secondary)
-            }
+//            .chartYAxisLabel(position: .leading) {
+//                Text("Price")
+//                    .font(Typography.caption)
+//                    .foregroundStyle(Color.secondary)
+//            }
         }
         .chartXAxis {
             AxisMarks(values: .stride(by: .day, count: getXAxisStride())) { _ in

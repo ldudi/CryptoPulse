@@ -4,6 +4,8 @@ import Observation
 @MainActor
 @Observable
 final class CoinDetailViewModel {
+    
+    let chartViewModel: ChartViewModel
 
     // MARK: - State
 
@@ -39,6 +41,11 @@ final class CoinDetailViewModel {
         deleteHoldingUseCase: DeleteHoldingUseCase,
         getHoldingUseCase: GetHoldingUseCase
     ) {
+        self.chartViewModel = ChartViewModel(
+                    coinId: coinID,
+                    getChartDataUseCase: getChartDataUseCase
+                )
+        
         self.coinID = coinID
         self.getCoinDetail = getCoinDetail
         self.addHoldingUseCase = addHoldingUseCase
