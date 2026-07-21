@@ -99,4 +99,27 @@ enum CoinEndpoints {
             ]
         )
     }
+
+    static func marketChart(
+        id: String,
+        days: String,
+        currency: String = "usd"
+    ) -> Endpoint<ChartDTO> {
+
+        Endpoint(
+
+            path: "coins/\(id)/market_chart",
+
+            method: .get,
+
+            queryItems: [
+
+                URLQueryItem(name: "vs_currency", value: currency),
+
+                URLQueryItem(name: "days", value: days)
+            ],
+
+            headers: [:]
+        )
+    }
 }

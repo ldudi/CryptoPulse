@@ -1,6 +1,6 @@
 import Foundation
 
-struct ChartDataPoint: Identifiable {
+struct ChartDataPoint: Identifiable, Equatable {
     let id = UUID()
     let date: Date
     let price: Double
