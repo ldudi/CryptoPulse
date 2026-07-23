@@ -1,40 +1,43 @@
 import Foundation
 import Observation
+import CryptoPulseDomain
 
 @MainActor
 @Observable
 final class CoinDetailViewModel {
     
     let chartViewModel: ChartViewModel
-
+    
     // MARK: - State
-
+    
     private(set) var state: CoinDetailViewState = .idle
-
+    
     // MARK: - Holding State
-
+    
     /// Current holding for the displayed coin, if any.
     private(set) var currentHolding: PortfolioHolding?
-
+    
     /// Indicates whether a save or delete operation is in progress.
     var isSaving: Bool = false
     
     /// Indicates whether the holding editor sheet should be shown.
     var isShowingEditor: Bool = false
-
+    
     // MARK: - Dependencies
-
+    
     private let coinID: String
     private let getCoinDetail: GetCoinDetailUseCase
     private let addHoldingUseCase: AddHoldingUseCase
     private let updateHoldingUseCase: UpdateHoldingUseCase
     private let deleteHoldingUseCase: DeleteHoldingUseCase
     private let getHoldingUseCase: GetHoldingUseCase
-
+    private let getChartDataUseCase: GetChartDataUseCase
+    
     // MARK: - Init
-
+    
     init(
         coinID: String,
+        getChartDataUseCase: GetChartDataUseCase,
         getCoinDetail: GetCoinDetailUseCase,
         addHoldingUseCase: AddHoldingUseCase,
         updateHoldingUseCase: UpdateHoldingUseCase,
@@ -42,9 +45,9 @@ final class CoinDetailViewModel {
         getHoldingUseCase: GetHoldingUseCase
     ) {
         self.chartViewModel = ChartViewModel(
-                    coinId: coinID,
-                    getChartDataUseCase: getChartDataUseCase
-                )
+            coinId: coinID,
+            getChartDataUseCase: getChartDataUseCase
+        )
         
         self.coinID = coinID
         self.getCoinDetail = getCoinDetail
@@ -52,31 +55,32 @@ final class CoinDetailViewModel {
         self.updateHoldingUseCase = updateHoldingUseCase
         self.deleteHoldingUseCase = deleteHoldingUseCase
         self.getHoldingUseCase = getHoldingUseCase
+        self.getChartDataUseCase = getChartDataUseCase
     }
-
+    
     // MARK: - Derived Properties
-
+    
     var coin: CoinDetail? {
         guard case let .loaded(coin) = state else { return nil }
         return coin
     }
-
+    
     var isLoading: Bool {
         if case .loading = state { return true }
         return false
     }
-
+    
     // MARK: - Actions
-
+    
     func loadCoin() async {
         guard case .idle = state else { return }
         await fetchCoin()
     }
-
+    
     func refresh() async {
         await fetchCoin()
     }
-
+    
     /// Show the holding editor sheet.
     func showEditor() {
         isShowingEditor = true
@@ -86,12 +90,12 @@ final class CoinDetailViewModel {
     func hideEditor() {
         isShowingEditor = false
     }
-
+    
     /// Save or update a holding with the given quantity.
     func saveHolding(quantity: Double) async {
         isSaving = true
         defer { isSaving = false }
-
+    
         do {
             if let existing = currentHolding {
                 // Update existing holding
@@ -117,7 +121,7 @@ final class CoinDetailViewModel {
                 )
                 try await addHoldingUseCase.execute(newHolding)
             }
-
+    
             // Reload holding after successful operation.
             await loadHolding()
             hideEditor()
@@ -126,12 +130,12 @@ final class CoinDetailViewModel {
             print("Error saving holding: \(error)")
         }
     }
-
+    
     /// Delete the current holding.
     func deleteHolding() async {
         isSaving = true
         defer { isSaving = false }
-
+    
         do {
             try await deleteHoldingUseCase.execute(coinID: coinID)
             currentHolding = nil
@@ -140,23 +144,23 @@ final class CoinDetailViewModel {
             print("Error deleting holding: \(error)")
         }
     }
-
+    
     // MARK: - Private
-
+    
     private func fetchCoin() async {
         state = .loading
-
+    
         do {
             let coin = try await getCoinDetail(id: coinID)
             state = .loaded(coin)
-
+    
             // Load the holding after the coin has been fetched.
             await loadHolding()
         } catch {
             state = .failed(error)
         }
     }
-
+    
     /// Loads the current holding for this coin, if it exists.
     private func loadHolding() async {
         do {
