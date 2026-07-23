@@ -16,27 +16,25 @@ final class AppDependencies {
     // MARK: - Data Sources
 
     let coinRemoteDataSource: CoinRemoteDataSource
+    let chartRemoteDataSource: ChartRemoteDataSource  // New
 
     // MARK: - Repositories
 
     let coinRepository: CoinRepository
     let portfolioRepository: PortfolioRepository
+    let chartRepository: ChartRepository  // New
 
     // MARK: - Use Cases
 
     let getMarketCoinsUseCase: GetMarketCoinsUseCase
     let getCoinDetailUseCase: GetCoinDetailUseCase
-
-    // MARK: - Portfolio Use Cases
-
     let addHoldingUseCase: AddHoldingUseCase
     let updateHoldingUseCase: UpdateHoldingUseCase
     let deleteHoldingUseCase: DeleteHoldingUseCase
-    let getPortfolioUseCase: GetPortfolioUseCase
     let getHoldingUseCase: GetHoldingUseCase
-
-    // New use case for enriched portfolio assets
+    let getPortfolioUseCase: GetPortfolioUseCase
     let getPortfolioAssetsUseCase: GetPortfolioAssetsUseCase
+    let getChartDataUseCase: GetChartDataUseCase  // New
 
     // MARK: - Initializer
 
@@ -65,6 +63,11 @@ final class AppDependencies {
         )
         self.coinRemoteDataSource = coinRemoteDataSource
 
+        let chartRemoteDataSource = Self.makeChartRemoteDataSource(
+            apiClient: apiClient
+        )
+        self.chartRemoteDataSource = chartRemoteDataSource
+
         // MARK: Repositories
 
         let coinRepository = Self.makeCoinRepository(
@@ -76,6 +79,11 @@ final class AppDependencies {
             persistence: persistence
         )
         self.portfolioRepository = portfolioRepository
+
+        let chartRepository = Self.makeChartRepository(
+            remoteDataSource: chartRemoteDataSource
+        )
+        self.chartRepository = chartRepository
 
         // MARK: Use Cases
 
@@ -120,6 +128,12 @@ final class AppDependencies {
             coinRepository: coinRepository
         )
         self.getPortfolioAssetsUseCase = getPortfolioAssetsUseCase
+
+        // New use case for chart data
+        let getChartDataUseCase = Self.makeGetChartDataUseCase(
+            repository: chartRepository
+        )
+        self.getChartDataUseCase = getChartDataUseCase
     }
 }
 
@@ -137,10 +151,22 @@ private extension AppDependencies {
         CoinRemoteDataSourceImpl(apiClient: apiClient)
     }
 
+    static func makeChartRemoteDataSource(
+        apiClient: APIClient
+    ) -> ChartRemoteDataSource {
+        ChartRemoteDataSourceImpl(apiClient: apiClient)
+    }
+
     static func makeCoinRepository(
         remoteDataSource: CoinRemoteDataSource
     ) -> CoinRepository {
         CoinRepositoryImpl(remoteDataSource: remoteDataSource)
+    }
+
+    static func makeChartRepository(
+        remoteDataSource: ChartRemoteDataSource
+    ) -> ChartRepository {
+        ChartRepositoryImpl(remoteDataSource: remoteDataSource)
     }
 
     static func makeGetMarketCoinsUseCase(
@@ -153,5 +179,11 @@ private extension AppDependencies {
         repository: CoinRepository
     ) -> GetCoinDetailUseCase {
         GetCoinDetailUseCase(repository: repository)
+    }
+
+    static func makeGetChartDataUseCase(
+        repository: ChartRepository
+    ) -> GetChartDataUseCase {
+        GetChartDataUseCase(repository: repository)
     }
 }
