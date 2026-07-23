@@ -16,7 +16,6 @@ final class AppDependencies {
     // MARK: - Data Sources
 
     let coinRemoteDataSource: CoinRemoteDataSource
-    let chartRemoteDataSource: ChartRemoteDataSource
 
     // MARK: - Repositories
 
@@ -62,11 +61,6 @@ final class AppDependencies {
             apiClient: apiClient
         )
         self.coinRemoteDataSource = coinRemoteDataSource
-
-        let chartRemoteDataSource = Self.makeChartRemoteDataSource(
-            apiClient: apiClient
-        )
-        self.chartRemoteDataSource = chartRemoteDataSource
 
         // MARK: Repositories
 
@@ -149,12 +143,6 @@ private extension AppDependencies {
         apiClient: APIClient
     ) -> CoinRemoteDataSource {
         CoinRemoteDataSourceImpl(apiClient: apiClient)
-    }
-
-    static func makeChartRemoteDataSource(
-        apiClient: APIClient
-    ) -> ChartRemoteDataSource {
-        ChartRemoteDataSourceImpl(apiClient: apiClient)
     }
 
     static func makeCoinRepository(
