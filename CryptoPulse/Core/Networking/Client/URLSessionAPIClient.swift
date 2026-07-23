@@ -66,6 +66,18 @@ final class URLSessionAPIClient: APIClient {
                 try ResponseValidator.validate(
                     httpResponse
                 )
+                
+                // DEBUG: Print raw response
+                print("===================================")
+                print("URL:", request.url?.absoluteString ?? "")
+                print("Status Code:", httpResponse.statusCode)
+
+                if let json = String(data: data, encoding: .utf8) {
+                    print("Response:")
+                    print(json)
+                }
+
+                print("===================================")
 
                 if Response.self == EmptyResponse.self {
 

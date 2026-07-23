@@ -1,61 +1,81 @@
 import SwiftUI
 
 struct HoldingEditorView: View {
-
+    
     @Binding var quantity: Double?
-    let onSave: (Double) -> Void
+    @Binding var averageBuyPrice: Double?
+    let onSave: (Double, Double) -> Void
     let onCancel: () -> Void
-
-    @State private var inputText: String = ""
-
+    
+    @State private var inputQuantity: String = ""
+    @State private var inputAverageBuyPrice: String = ""
+    
     init(
         quantity: Binding<Double?>,
-        onSave: @escaping (Double) -> Void,
+        averageBuyPrice: Binding<Double?>,
+        onSave: @escaping (Double, Double) -> Void,
         onCancel: @escaping () -> Void
     ) {
         self._quantity = quantity
+        self._averageBuyPrice = averageBuyPrice
         self.onSave = onSave
         self.onCancel = onCancel
-
-        if let q = quantity.wrappedValue {
-            _inputText = State(initialValue: String(q))
+        
+        if let quantityValue = quantity.wrappedValue {
+            self._inputQuantity = State(initialValue: String(format: "%.4f", quantityValue))
+        }
+        
+        if let buyPriceValue = averageBuyPrice.wrappedValue {
+            self._inputAverageBuyPrice = State(initialValue: String(format: "%.2f", buyPriceValue))
         }
     }
-
+    
     var body: some View {
-        NavigationStack {
-            Form {
-                Section(header: Text("Quantity")) {
-                    TextField("Enter quantity", text: $inputText)
-                        .keyboardType(.decimalPad)
-                        .onChange(of: inputText) { new in
-                            // Allow only numbers and decimal point.
-                            let filtered = new.filter { "0123456789.".contains($0) }
-                            if filtered != new {
-                                inputText = filtered
-                            }
-                        }
-                }
-
-                Section {
-                    Button("Save") {
-                        if let qty = Double(inputText), qty > 0 {
-                            onSave(qty)
-                        }
-                    }
-                    .disabled(!isValid)
-
-                    Button("Cancel", role: .cancel) {
-                        onCancel()
-                    }
-                }
+        VStack(spacing: Spacing.medium) {
+            Text("Edit Holding")
+                .font(.title2)
+                .fontWeight(.bold)
+            
+            VStack(alignment: .leading, spacing: Spacing.small) {
+                Text("Quantity")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                
+                TextField("Enter quantity", text: $inputQuantity)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .keyboardType(.decimalPad)
             }
-            .navigationTitle(quantity == nil ? "Add Holding" : "Edit Holding")
+            
+            VStack(alignment: .leading, spacing: Spacing.small) {
+                Text("Average Buy Price")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                
+                TextField("Enter buy price", text: $inputAverageBuyPrice)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .keyboardType(.decimalPad)
+            }
+            
+            HStack {
+                Button("Cancel") {
+                    onCancel()
+                }
+                .foregroundColor(.primary)
+                
+                Spacer()
+                
+                Button("Save") {
+                    guard let quantityValue = Double(inputQuantity),
+                          let buyPriceValue = Double(inputAverageBuyPrice) else {
+                        return
+                    }
+                    
+                    onSave(quantityValue, buyPriceValue)
+                }
+                .disabled(inputQuantity.isEmpty || inputAverageBuyPrice.isEmpty)
+                .foregroundColor(.blue)
+            }
         }
-    }
-
-    private var isValid: Bool {
-        if let qty = Double(inputText), qty > 0 { return true }
-        return false
+        .padding()
     }
 }

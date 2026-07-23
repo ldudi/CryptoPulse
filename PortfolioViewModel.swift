@@ -4,80 +4,88 @@ import Observation
 @MainActor
 @Observable
 final class PortfolioViewModel {
-
-    // MARK: - Dependencies
-
-    private let getPortfolioAssetsUseCase: GetPortfolioAssetsUseCase
-    private let deleteHoldingUseCase: DeleteHoldingUseCase
-
+    
     // MARK: - State
-
-    private(set) var state = PortfolioState()
-
+    
+    private(set) var state: PortfolioViewState = .idle
+    
+    // MARK: - Dependencies
+    
+    private let getPortfolioUseCase: GetPortfolioUseCase
+    private let deleteHoldingUseCase: DeleteHoldingUseCase
+    
     // MARK: - Init
-
+    
     init(
-        getPortfolioAssetsUseCase: GetPortfolioAssetsUseCase,
+        getPortfolioUseCase: GetPortfolioUseCase,
         deleteHoldingUseCase: DeleteHoldingUseCase
     ) {
-        self.getPortfolioAssetsUseCase = getPortfolioAssetsUseCase
+        self.getPortfolioUseCase = getPortfolioUseCase
         self.deleteHoldingUseCase = deleteHoldingUseCase
     }
-
-    // MARK: - Public API
-
-    /// Loads the portfolio data and updates the UI state.
-    func load() async {
-        await refresh()
+    
+    // MARK: - Computed Properties
+    
+    var holdings: [PortfolioHolding] {
+        guard case let .loaded(holdings) = state else { return [] }
+        return holdings
     }
-
-    /// Refreshes the portfolio (used for pull‑to‑refresh).
+    
+    var isLoading: Bool {
+        if case .loading = state { return true }
+        return false
+    }
+    
+    var isEmpty: Bool {
+        if case .empty = state { return true }
+        return false
+    }
+    
+    var error: Error? {
+        guard case let .failed(error) = state else { return nil }
+        return error
+    }
+    
+    // MARK: - Actions
+    
+    /// Load the portfolio data if not already loaded.
+    func loadPortfolio() async {
+        guard case .idle = state else { return }
+        await fetchPortfolio()
+    }
+    
+    /// Refresh the portfolio data regardless of current state.
     func refresh() async {
-        state.status = .loading
-        do {
-            let assets = try await getPortfolioAssetsUseCase.execute()
-
-            if assets.isEmpty {
-                // No holdings – show empty state.
-                state.assets = []
-                state.totalValue = 0.0
-                state.assetCount = 0
-                state.totalCoins = 0.0
-                state.largestHolding = nil
-                state.status = .empty
-            } else {
-                // Populate assets and compute derived values.
-                state.assets = assets
-                computeDerivedValues()
-                state.status = .loaded
-            }
-        } catch {
-            state.status = .error(error)
-        }
+        await fetchPortfolio()
     }
-
-    /// Deletes a holding and reloads the portfolio.
+    
+    /// Delete a holding by coin ID.
     func deleteHolding(coinID: String) async {
         do {
             try await deleteHoldingUseCase.execute(coinID: coinID)
-            await refresh()
+            // After successful deletion, reload the portfolio
+            await fetchPortfolio()
         } catch {
-            state.status = .error(error)
+            // Error is handled by state change in fetchPortfolio method
         }
     }
-
-    // MARK: - Private Helpers
-
-    /// Computes total value, asset count, total coins and the largest holding.
-    private func computeDerivedValues() {
-        let totalValue = state.assets.reduce(0.0) { $0 + $1.currentValue }
-        let assetCount = state.assets.count
-        let totalCoins = state.assets.reduce(0.0) { $0 + $1.quantity }
-        let largestHolding = state.assets.max(by: { ($0.currentValue ?? 0.0) < ($1.currentValue ?? 0.0) })
-
-        state.totalValue = totalValue
-        state.assetCount = assetCount
-        state.totalCoins = totalCoins
-        state.largestHolding = largestHolding
+    
+    // MARK: - Private
+    
+    /// Fetch portfolio data from the use case.
+    private func fetchPortfolio() async {
+        state = .loading
+        
+        do {
+            let holdings = try await getPortfolioUseCase.execute()
+            
+            if holdings.isEmpty {
+                state = .empty
+            } else {
+                state = .loaded(holdings)
+            }
+        } catch {
+            state = .failed(error)
+        }
     }
 }

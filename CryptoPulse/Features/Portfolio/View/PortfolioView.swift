@@ -5,60 +5,77 @@ struct PortfolioView: View {
     @State
     private var viewModel: PortfolioViewModel
 
-    init(
-        viewModel: PortfolioViewModel
-    ) {
+    init(viewModel: PortfolioViewModel) {
         _viewModel = State(initialValue: viewModel)
     }
 
     var body: some View {
-        NavigationStack {
-            content
-                .navigationTitle("Portfolio")
-                .toolbar {
-                    ToolbarItem(placement: .primaryAction) {
-                        Button(action: { Task { await viewModel.refresh() } }) {
-                            Image(systemName: AppIcon.refresh)
+        content
+            .navigationTitle("Portfolio")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        Task {
+                            await viewModel.refresh()
                         }
+                    } label: {
+                        Image(systemName: AppIcon.refresh)
                     }
                 }
-                .task { await viewModel.load() }
-        }
+            }
+            .task {
+                await viewModel.loadPortfolio()
+            }
+            .refreshable {
+                await viewModel.refresh()
+            }
     }
 
     @ViewBuilder
     private var content: some View {
-        switch viewModel.state.status {
+        switch viewModel.state {
 
-        case .idle, .loading:
+        case .idle,
+             .loading:
+
             ProgressView()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
 
         case .empty:
+
             EmptyPortfolioView()
 
-        case .error(let error):
+        case .failed(let error):
+
             ErrorView(
-                title: "Error",
+                title: "Unable to Load Portfolio",
                 message: error.localizedDescription,
                 buttonTitle: "Retry"
             ) {
-                Task { await viewModel.refresh() }
+                Task {
+                    await viewModel.refresh()
+                }
             }
 
         case .loaded:
-            VStack(spacing: Spacing.medium) {
-                PortfolioSummaryView(state: viewModel.state)
 
-                List(viewModel.state.assets) { asset in
-                    PortfolioRowView(
-                        asset: asset,
-                        onDelete: {
-                            Task { await viewModel.deleteHolding(coinID: asset.coinID) }
-                        })
-                }
-                .listStyle(.plain)
+            List(viewModel.assets) { asset in
+                PortfolioRowView(
+                    asset: asset,
+                    onDelete: {
+                        Task {
+                            await viewModel.deleteHolding(
+                                coinID: asset.coinID
+                            )
+                        }
+                    }
+                )
             }
+            .listStyle(.plain)
         }
     }
+}
+
+#Preview {
+    // Add preview once DI is available.
 }

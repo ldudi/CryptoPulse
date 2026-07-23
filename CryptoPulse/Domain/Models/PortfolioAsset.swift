@@ -29,9 +29,14 @@ struct PortfolioAsset: Identifiable {
     /// Rank by market cap.
     let marketCapRank: Int?
 
+    // MARK: - Analytics
+
+    /// Allocation percentage of this asset in the portfolio.
+    let allocationPercentage: Double
+
     // MARK: - Initializer
 
-    init(holding: PortfolioHolding, coin: Coin) {
+    init(holding: PortfolioHolding, coin: Coin, allocationPercentage: Double) {
         self.coinID = holding.coinID
         self.symbol = holding.symbol
         self.name = holding.name
@@ -42,5 +47,6 @@ struct PortfolioAsset: Identifiable {
         self.currentValue = coin.currentPrice * holding.quantity
         self.priceChange24H = coin.priceChange24H
         self.marketCapRank = coin.marketCapRank
+        self.allocationPercentage = allocationPercentage
     }
 }

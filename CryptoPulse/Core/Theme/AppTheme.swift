@@ -9,7 +9,6 @@
 //
 //  AppTheme.swift
 //
-
 import SwiftUI
 
 enum AppTheme {

@@ -7,6 +7,7 @@
 //
 //import Foundation
 import Foundation
+import SwiftUI
 
 struct CoinDetail: Identifiable {
 
@@ -26,4 +27,11 @@ struct CoinDetail: Identifiable {
     let low24h: Double
 
     let priceChange24h: Double
+}
+
+extension CoinDetail {
+
+    var priceChangeColor: Color {
+        priceChange24h >= 0 ? .green : .red
+    }
 }

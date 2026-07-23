@@ -1,17 +1,3 @@
-//
-//  MarketView.swift
-//  CryptoPulse
-//
-//  Created by Labhesh Dudi on 17/07/26.
-//
-//
-//import Foundation
-//
-//
-//  MarketView.swift
-//  CryptoPulse
-//
-
 import SwiftUI
 
 struct MarketView: View {
@@ -22,33 +8,70 @@ struct MarketView: View {
     @State
     private var viewModel: MarketViewModel
 
-    init(
-        viewModel: MarketViewModel
-    ) {
-        _viewModel = State(
-            initialValue: viewModel
-        )
+    init(viewModel: MarketViewModel) {
+        _viewModel = State(initialValue: viewModel)
     }
 
     var body: some View {
 
-        MarketContentView(
-            viewModel: viewModel,
-            onSelectCoin: { coin in
+        Group {
 
-                container.coordinator.push(
-                    .coinDetail(coin.id)
+            switch viewModel.state {
+
+            case .idle:
+                Color.clear
+
+            case .loading:
+                ProgressView()
+
+            case .empty:
+                ContentUnavailableView(
+                    "No Coins",
+                    systemImage: "bitcoinsign.circle",
+                    description: Text(
+                        "No cryptocurrencies were found."
+                    )
                 )
+
+            case .failed(let error):
+                ContentUnavailableView(
+                    "Something went wrong",
+                    systemImage: "exclamationmark.triangle",
+                    description: Text(
+                        error.localizedDescription
+                    )
+                )
+
+            case .loaded:
+
+                List(viewModel.displayedCoins) { coin in
+
+                    Button {
+
+                        container.appCoordinator.navigate(
+                            to: .coinDetail(coin.id)
+                        )
+
+                    } label: {
+
+                        CoinRowView(
+                            coin: coin
+                        )
+                    }
+                    .buttonStyle(.plain)
+                }
             }
+        }
+        .navigationTitle("Market")
+        .searchable(
+            text: $viewModel.searchText
         )
-        .onAppear {
+        .refreshable {
+            await viewModel.refresh()
+        }
+        .task {
 
-            guard !viewModel.hasContent else {
-                return
-            }
-
-            Task {
-
+            if case .idle = viewModel.state {
                 await viewModel.loadMarkets()
             }
         }

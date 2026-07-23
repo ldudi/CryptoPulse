@@ -1,47 +1,61 @@
 import SwiftUI
 
 struct PortfolioSummaryView: View {
-
+    
     let state: PortfolioState
-
+    
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.small) {
             Text("Total Value")
                 .font(.headline)
-            Text("$\(state.totalValue, specifier: "%.2f")")
+            
+            Text(state.totalValue, format: .currency(code: "USD"))
                 .font(.title)
-
-            HStack(spacing: Spacing.medium) {
-                VStack(alignment: .leading) {
+                .fontWeight(.bold)
+            
+            Divider()
+            
+            HStack {
+                VStack(alignment: .leading, spacing: Spacing.xSmall) {
                     Text("Assets")
-                        .font(.subheadline)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    
                     Text("\(state.assetCount)")
-                        .font(.body)
+                        .font(.headline)
                 }
+                
                 Spacer()
-                VStack(alignment: .leading) {
-                    Text("Total Coins")
-                        .font(.subheadline)
+                
+                VStack(alignment: .leading, spacing: Spacing.xSmall) {
+                    Text("Coins")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    
                     Text("\(state.totalCoins, specifier: "%.4f")")
-                        .font(.body)
+                        .font(.headline)
                 }
-            }
-
-            if let largest = state.largestHolding {
-                HStack(spacing: Spacing.small) {
-                    Image(systemName: AppIcon.chart)
-                        .foregroundColor(AppColors.primaryText)
-                    Text("Largest Holding:")
-                        .font(.subheadline)
-                    Text("\(largest.name) (\(largest.quantity, specifier: "%.4f"))")
-                        .font(.body)
+                
+                Spacer()
+                
+                VStack(alignment: .leading, spacing: Spacing.xSmall) {
+                    Text("Largest Holding")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    
+                    if let largestHolding = state.largestHolding {
+                        Text(largestHolding.allocationPercentage.formatted(.percent))
+                            .font(.headline)
+                    } else {
+                        Text("--")
+                            .font(.headline)
+                    }
                 }
             }
         }
         .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(AppColors.secondaryBackground)
-        )
+        .background(AppColors.secondaryBackground)
+        .cornerRadius(Spacing.small)
+        .appShadow(AppShadows.medium)
     }
 }

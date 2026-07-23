@@ -5,16 +5,16 @@ import Observation
 @Observable
 final class PortfolioViewModel {
 
+    // MARK: - State
+
+    private(set) var state: PortfolioViewState = .idle
+
     // MARK: - Dependencies
 
     private let getPortfolioAssetsUseCase: GetPortfolioAssetsUseCase
     private let deleteHoldingUseCase: DeleteHoldingUseCase
 
-    // MARK: - State
-
-    private(set) var state = PortfolioState()
-
-    // MARK: - Init
+    // MARK: - Initializer
 
     init(
         getPortfolioAssetsUseCase: GetPortfolioAssetsUseCase,
@@ -24,60 +24,74 @@ final class PortfolioViewModel {
         self.deleteHoldingUseCase = deleteHoldingUseCase
     }
 
-    // MARK: - Public API
+    // MARK: - Computed Properties
 
-    /// Loads the portfolio data and updates the UI state.
-    func load() async {
-        await refresh()
+    var assets: [PortfolioAsset] {
+        guard case let .loaded(assets) = state else {
+            return []
+        }
+        return assets
     }
 
-    /// Refreshes the portfolio (used for pull‑to‑refresh).
+    var isLoading: Bool {
+        if case .loading = state {
+            return true
+        }
+        return false
+    }
+
+    var isEmpty: Bool {
+        if case .empty = state {
+            return true
+        }
+        return false
+    }
+
+    var error: Error? {
+        guard case let .failed(error) = state else {
+            return nil
+        }
+        return error
+    }
+
+    // MARK: - Public Methods
+
+    /// Loads the portfolio only once.
+    func loadPortfolio() async {
+        guard case .idle = state else { return }
+        await fetchPortfolio()
+    }
+
+    /// Forces a refresh.
     func refresh() async {
-        state.status = .loading
+        await fetchPortfolio()
+    }
+
+    /// Deletes a holding and refreshes the portfolio.
+    func deleteHolding(coinID: String) async {
+        do {
+            try await deleteHoldingUseCase.execute(coinID: coinID)
+            await fetchPortfolio()
+        } catch {
+            state = .failed(error)
+        }
+    }
+
+    // MARK: - Private Methods
+
+    private func fetchPortfolio() async {
+        state = .loading
+
         do {
             let assets = try await getPortfolioAssetsUseCase.execute()
 
             if assets.isEmpty {
-                // No holdings – show empty state.
-                state.assets = []
-                state.totalValue = 0.0
-                state.assetCount = 0
-                state.totalCoins = 0.0
-                state.largestHolding = nil
-                state.status = .empty
+                state = .empty
             } else {
-                // Populate assets and compute derived values.
-                state.assets = assets
-                computeDerivedValues()
-                state.status = .loaded
+                state = .loaded(assets)
             }
         } catch {
-            state.status = .error(error)
+            state = .failed(error)
         }
-    }
-
-    /// Deletes a holding and reloads the portfolio.
-    func deleteHolding(coinID: String) async {
-        do {
-            try await deleteHoldingUseCase.execute(coinID: coinID)
-            await refresh()
-        } catch {
-            state.status = .error(error)
-        }
-    }
-
-    // MARK: - Private Helpers
-
-    /// Computes total value, asset count, total coins and the largest holding.
-    private func computeDerivedValues() {
-        let totalValue = state.assets.reduce(0.0) { $0 + $1.currentValue }
-        let assetCount = state.assets.count
-        let totalCoins = state.assets.reduce(0.0) { $0 + $1.quantity }
-        let largestHolding = state.assets.max(by: { ($0.currentValue ?? 0.0) < ($1.currentValue ?? 0.0) })
-
-        state.totalValue = totalValue
-        state.assetCount = assetCount
-        state.totalCoins = totalCoins
-        state.largestHolding = largestHolding
     }
 }
