@@ -1,6 +1,5 @@
 import Foundation
 import Observation
-import CryptoPulseDomain
 
 @MainActor
 @Observable

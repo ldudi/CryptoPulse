@@ -24,6 +24,7 @@ struct FeatureDependencies {
 
         CoinDetailViewModel(
             coinID: coinID,
+            getChartDataUseCase: appDependencies.getChartDataUseCase,
             getCoinDetail: appDependencies.getCoinDetailUseCase,
             addHoldingUseCase: appDependencies.addHoldingUseCase,
             updateHoldingUseCase: appDependencies.updateHoldingUseCase,

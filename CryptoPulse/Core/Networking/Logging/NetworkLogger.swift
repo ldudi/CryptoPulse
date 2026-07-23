@@ -34,12 +34,11 @@ final class NetworkLogger {
             """
         )
     }
-
+    
     func logResponse(
         response: HTTPURLResponse,
         data: Data
     ) {
-
         logger.info(
             """
             ⬅️ Response
@@ -47,11 +46,55 @@ final class NetworkLogger {
             Status: \(response.statusCode)
 
             URL:
-
             \(response.url?.absoluteString ?? "")
             """
         )
+
+        if let jsonObject = try? JSONSerialization.jsonObject(with: data),
+           let prettyData = try? JSONSerialization.data(
+                withJSONObject: jsonObject,
+                options: [.prettyPrinted]
+           ),
+           let jsonString = String(data: prettyData, encoding: .utf8) {
+
+            logger.info(
+                """
+                📦 Response Body
+
+                \(jsonString)
+                """
+            )
+        } else if let body = String(data: data, encoding: .utf8) {
+
+            logger.info(
+                """
+                📦 Response Body
+
+                \(body)
+                """
+            )
+        } else {
+            logger.error("Unable to decode response body.")
+        }
     }
+
+//    func logResponse(
+//        response: HTTPURLResponse,
+//        data: Data
+//    ) {
+//
+//        logger.info(
+//            """
+//            ⬅️ Response
+//
+//            Status: \(response.statusCode)
+//
+//            URL:
+//
+//            \(response.url?.absoluteString ?? "")
+//            """
+//        )
+//    }
 
     func logError(
         _ error: Error

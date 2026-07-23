@@ -7,9 +7,11 @@ struct ChartDTO: Decodable {
         let timestamp: Double
         let price: Double
 
-        enum CodingKeys: String, CodingKey {
-            case timestamp
-            case price
+        init(from decoder: Decoder) throws {
+            var container = try decoder.unkeyedContainer()
+
+            timestamp = try container.decode(Double.self)
+            price = try container.decode(Double.self)
         }
     }
 }
