@@ -16,13 +16,13 @@ final class AppDependencies {
     // MARK: - Data Sources
 
     let coinRemoteDataSource: CoinRemoteDataSource
-    let chartRemoteDataSource: ChartRemoteDataSource  // New
+    let chartRemoteDataSource: ChartRemoteDataSource
 
     // MARK: - Repositories
 
     let coinRepository: CoinRepository
     let portfolioRepository: PortfolioRepository
-    let chartRepository: ChartRepository  // New
+    let chartRepository: ChartRepository
 
     // MARK: - Use Cases
 
@@ -34,7 +34,7 @@ final class AppDependencies {
     let getHoldingUseCase: GetHoldingUseCase
     let getPortfolioUseCase: GetPortfolioUseCase
     let getPortfolioAssetsUseCase: GetPortfolioAssetsUseCase
-    let getChartDataUseCase: GetChartDataUseCase  // New
+    let getChartDataUseCase: GetChartDataUseCase
 
     // MARK: - Initializer
 
@@ -81,7 +81,7 @@ final class AppDependencies {
         self.portfolioRepository = portfolioRepository
 
         let chartRepository = Self.makeChartRepository(
-            remoteDataSource: chartRemoteDataSource
+            apiClient: apiClient
         )
         self.chartRepository = chartRepository
 
@@ -164,9 +164,9 @@ private extension AppDependencies {
     }
 
     static func makeChartRepository(
-        remoteDataSource: ChartRemoteDataSource
+        apiClient: APIClient
     ) -> ChartRepository {
-        ChartRepositoryImpl(remoteDataSource: remoteDataSource)
+        ChartRepositoryImpl(apiClient: apiClient)
     }
 
     static func makeGetMarketCoinsUseCase(
