@@ -1,18 +1,27 @@
+//
+//  CoinDetailContentView.swift
+//  CryptoPulse
+//
+
 import SwiftUI
+import Observation
 
 struct CoinDetailContentView: View {
+
     @Bindable var viewModel: CoinDetailViewModel
-    
+
     var body: some View {
+
         Group {
+
             switch viewModel.state {
-            case .idle:
-                ProgressView()
-                
-            case .loading:
+
+            case .idle, .loading:
+
                 LoadingView()
-                
+
             case .failed(let error):
+
                 ErrorView(
                     title: "Unable to load coin",
                     message: error.localizedDescription
@@ -21,19 +30,17 @@ struct CoinDetailContentView: View {
                         await viewModel.refresh()
                     }
                 }
-                
+
             case .loaded(let coin):
+
                 CoinDetailLoadedView(
                     coin: coin,
                     viewModel: viewModel
                 )
-                .background(
-                    ChartContainerView(viewModel: viewModel.chartViewModel)
-                        .transition(.opacity)
-                )
             }
         }
-        .navigationTitle("Coin Detail")
+        .navigationTitle(viewModel.coin?.name ?? "Coin")
         .navigationBarTitleDisplayMode(.inline)
+        .animation(.snappy, value: viewModel.state)
     }
 }

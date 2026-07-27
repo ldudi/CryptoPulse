@@ -20,6 +20,8 @@ enum Typography {
 
     static let title2 = Font.title2.weight(.semibold)
 
+    static let title3 = Font.title3.weight(.semibold)
+
     static let headline = Font.headline
 
     static let body = Font.body
