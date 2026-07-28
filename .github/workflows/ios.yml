@@ -11,6 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: List installed Xcodes
+        run: ls /Applications | grep Xcode
+
       - name: Show Xcode Version
         run: xcodebuild -version
 
