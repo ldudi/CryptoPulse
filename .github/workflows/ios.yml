@@ -1,25 +1,26 @@
 name: iOS
 
 on:
-
   push:
-
   pull_request:
 
 jobs:
-
   build:
-
     runs-on: macos-latest
 
     steps:
-
       - uses: actions/checkout@v4
 
+      - name: Show Xcode Version
+        run: xcodebuild -version
+
+      - name: Show Available Destinations
+        run: xcodebuild -project CryptoPulse.xcodeproj -scheme CryptoPulse -showdestinations
+
       - name: Build
-
         run: |
-
           xcodebuild \
-          -scheme CryptoPulse \
-          -destination 'platform=iOS Simulator,name=iPhone 16'
+            -project CryptoPulse.xcodeproj \
+            -scheme CryptoPulse \
+            -destination 'generic/platform=iOS Simulator' \
+            clean build
