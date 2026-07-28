@@ -28,3 +28,6 @@ fastlane/Preview.html
 # API Keys
 Secrets.plistobjects.txt
 .aider*
+
+xcuserdata/
+*.xcuserstate
