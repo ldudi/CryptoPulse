@@ -11,14 +11,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: List installed Xcodes
-        run: ls /Applications | grep Xcode
-
-      - name: Show Xcode Version
+      - name: Show default Xcode
         run: xcodebuild -version
+
+      - name: List installed Xcodes
+        run: ls -1 /Applications | grep '^Xcode'
+
+      - name: Select latest installed Xcode
+        run: |
+          set -eux
+          XCODE_APP=$(ls -1 /Applications | grep -E '^Xcode' | sort -V | tail -n1)
+          echo "Switching to /Applications/$XCODE_APP"
+          sudo xcode-select --switch "/Applications/$XCODE_APP/Contents/Developer"
+          xcodebuild -version
 
       - name: Show Available Destinations
         run: xcodebuild -project CryptoPulse.xcodeproj -scheme CryptoPulse -showdestinations
+
+      - name: Show Xcode Version
+        run: xcodebuild -version
 
       - name: Build
         run: |
