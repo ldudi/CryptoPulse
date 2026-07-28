@@ -1,73 +1,100 @@
+//
+//  CoinDetailLoadedView.swift
+//
+
 import SwiftUI
 import Observation
 
 @MainActor
 struct CoinDetailLoadedView: View {
-    
+
     let coin: CoinDetail
-    
-    @Bindable var viewModel: CoinDetailViewModel
-    
+
+    @Bindable
+    var viewModel: CoinDetailViewModel
+
     var body: some View {
-        VStack(spacing: 16) {
-            // Coin Header
-            if let coin = viewModel.coin {
-                CoinDetailHeaderView(coin: coin)
-            }
-            
-            CoinPriceCardView(
-                coin: coin
-            )
-            
-            // Chart Section - inserted between header and market stats
-            ChartContainerView(viewModel: viewModel.chartViewModel)
-                .frame(height: 200)
-                .padding(.horizontal)
-            
-            // Market Statistics Section
-            VStack(alignment: .leading, spacing: 12) {
-                // Example market cap row
-                HStack {
-                    Text("Market Cap")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    Spacer()
-                    Text(viewModel.coin?.marketCap.asCurrency() ?? "")
-                        .font(.title2)
-                        .foregroundColor(.primary)
+
+        ScrollView {
+
+            LazyVStack(
+                alignment: .leading,
+                spacing: Spacing.large
+            ) {
+
+                CoinDetailHeaderView(
+                    coin: coin
+                )
+
+                ChartContainerView(
+                    viewModel: viewModel.chartViewModel
+                )
+
+                CoinPriceCardView(
+                    coin: coin
+                )
+
+                if let holding = viewModel.currentHolding {
+
+                    HoldingSummaryCard(
+                        holding: holding,
+                        currentPrice: coin.currentPrice
+                    ) {
+                        viewModel.showEditor()
+                    }
+
+                } else {
+
+                    EmptyHoldingCard {
+                        viewModel.showEditor()
+                    }
                 }
-                .padding(.horizontal)
-                
-                // Additional detail rows (e.g., volume, price change)
-//                ForEach(viewModel.coin?.detailRows ?? [:]) { row in
-//                    DetailRow(title: row.title, value: row.value, valueColor: row.valueColor)
-//                }
+
+                if !coin.description.isEmpty {
+
+                    CoinDescriptionCard(
+                        description: coin.description
+                    )
+                }
             }
-            .padding(.horizontal)
-            
-            // Add Holding Button
-            Button(action: {
-                viewModel.showEditor()
-            }) {
-                Text("Add Holding")
-                    .font(.title2)
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.blue)
-                    .cornerRadius(12)
-            }
-            .padding(.horizontal)
-            
-            // Time Range Picker
-            HStack {
-                Text("Time Range")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                Spacer()
-            }
-            .padding(.horizontal)
+            .padding(.horizontal, Spacing.medium)
+            .padding(.vertical, Spacing.medium)
         }
-        .navigationTitle(viewModel.coin?.name ?? "")
+        .background(AppColors.background)
+        .navigationTitle(coin.name)
+        .navigationBarTitleDisplayMode(.inline)
+        .safeAreaInset(edge: .bottom) {
+
+            Button {
+
+                viewModel.showEditor()
+
+            } label: {
+
+                Label(
+                    viewModel.currentHolding == nil
+                        ? "Add Holding"
+                        : "Edit Holding",
+                    systemImage: viewModel.currentHolding == nil
+                        ? AppIcon.plus
+                        : AppIcon.edit
+                )
+                .font(Typography.headline)
+                .foregroundStyle(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, Spacing.medium)
+                .background(AppColors.accent)
+                .clipShape(
+                    RoundedRectangle(
+                        cornerRadius: Radius.large,
+                        style: .continuous
+                    )
+                )
+            }
+            .buttonStyle(.plain)
+            .padding(.horizontal, Spacing.medium)
+            .padding(.top, Spacing.small)
+            .background(.ultraThinMaterial)
+        }
     }
 }
