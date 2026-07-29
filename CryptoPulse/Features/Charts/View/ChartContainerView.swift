@@ -73,8 +73,13 @@ private extension ChartContainerView {
     var chartContent: some View {
 
         ZStack {
+            
+            if viewModel.isLoading {
+                
+                ChartLoadingView()
+                    .transition(.opacity)
 
-            if let error = viewModel.errorMessage {
+            } else if let error = viewModel.errorMessage {
 
                 ChartErrorView(
                     message: error
@@ -100,12 +105,7 @@ private extension ChartContainerView {
 
             }
 
-            if viewModel.isLoading {
-
-                ChartLoadingView()
-                    .transition(.opacity)
-
-            }
+            
 
         }
         .frame(height: 240)
