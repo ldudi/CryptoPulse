@@ -1,4 +1,5 @@
 import Foundation
+import SwiftData
 
 @MainActor
 final class AppDependencies {
@@ -22,6 +23,7 @@ final class AppDependencies {
     let coinRepository: CoinRepository
     let portfolioRepository: PortfolioRepository
     let chartRepository: ChartRepository
+    let searchRepository: SearchRepository
 
     // MARK: - Use Cases
 
@@ -34,6 +36,9 @@ final class AppDependencies {
     let getPortfolioUseCase: GetPortfolioUseCase
     let getPortfolioAssetsUseCase: GetPortfolioAssetsUseCase
     let getChartDataUseCase: GetChartDataUseCase
+    let getSearchSuggestionsUseCase: GetSearchSuggestionsUseCase
+    let getRecentSearchesUseCase: GetRecentSearchesUseCase
+    let saveRecentSearchUseCase: SaveRecentSearchUseCase
 
     // MARK: - Initializer
 
@@ -78,6 +83,12 @@ final class AppDependencies {
             apiClient: apiClient
         )
         self.chartRepository = chartRepository
+        
+        let searchRepository = Self.makeSearchRepository(
+            modelContext: persistence.container.mainContext,
+            apiClient: apiClient
+        )
+        self.searchRepository = searchRepository
 
         // MARK: Use Cases
 
@@ -128,6 +139,21 @@ final class AppDependencies {
             repository: chartRepository
         )
         self.getChartDataUseCase = getChartDataUseCase
+        
+        let getSearchSuggestionsUseCase = GetSearchSuggestionsUseCase(
+            repository: searchRepository
+        )
+        self.getSearchSuggestionsUseCase = getSearchSuggestionsUseCase
+
+        let getRecentSearchesUseCase = GetRecentSearchesUseCase(
+            repository: searchRepository
+        )
+        self.getRecentSearchesUseCase = getRecentSearchesUseCase
+
+        let saveRecentSearchUseCase = SaveRecentSearchUseCase(
+            repository: searchRepository
+        )
+        self.saveRecentSearchUseCase = saveRecentSearchUseCase
     }
 }
 
@@ -173,5 +199,16 @@ private extension AppDependencies {
         repository: ChartRepository
     ) -> GetChartDataUseCase {
         GetChartDataUseCase(repository: repository)
+    }
+    
+    static func makeSearchRepository(
+        modelContext: ModelContext,
+        apiClient: APIClient
+    ) -> SearchRepository {
+
+        SearchRepositoryImpl(
+            modelContext: modelContext,
+            apiClient: apiClient
+        )
     }
 }

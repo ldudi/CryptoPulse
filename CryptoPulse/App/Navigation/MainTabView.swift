@@ -13,7 +13,7 @@ struct MainTabView: View {
 
             MarketView(
                 viewModel: container.featureDependencies
-                    .makeMarketViewModel()
+                    .makeMarketViewModel(), searchViewModel: container.featureDependencies.makeSearchViewModel()
             )
             .tabItem {
                 Label(
