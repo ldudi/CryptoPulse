@@ -1,3 +1,8 @@
+//
+//  MarketView.swift
+//  CryptoPulse
+//
+
 import SwiftUI
 
 struct MarketView: View {
@@ -8,70 +13,57 @@ struct MarketView: View {
     @State
     private var viewModel: MarketViewModel
 
-    init(viewModel: MarketViewModel) {
+    @State
+    private var searchViewModel: SearchViewModel
+
+    init(
+        viewModel: MarketViewModel,
+        searchViewModel: SearchViewModel
+    ) {
         _viewModel = State(initialValue: viewModel)
+        _searchViewModel = State(initialValue: searchViewModel)
     }
 
     var body: some View {
 
-        Group {
+        MarketContentView(
+            viewModel: viewModel,
+            searchViewModel: searchViewModel,
+            onSelectCoin: { coin in
 
-            switch viewModel.state {
-
-            case .idle:
-                Color.clear
-
-            case .loading:
-                ProgressView()
-
-            case .empty:
-                ContentUnavailableView(
-                    "No Coins",
-                    systemImage: "bitcoinsign.circle",
-                    description: Text(
-                        "No cryptocurrencies were found."
-                    )
+                container.appCoordinator.navigate(
+                    to: .coinDetail(coin.id)
                 )
+            },
+            onSelectSuggestion: { suggestion in
 
-            case .failed(let error):
-                ContentUnavailableView(
-                    "Something went wrong",
-                    systemImage: "exclamationmark.triangle",
-                    description: Text(
-                        error.localizedDescription
+                Task {
+
+                    await searchViewModel.selectSuggestion(
+                        suggestion
                     )
-                )
 
-            case .loaded:
-
-                List(viewModel.displayedCoins) { coin in
-
-                    Button {
-
-                        container.appCoordinator.navigate(
-                            to: .coinDetail(coin.id)
-                        )
-
-                    } label: {
-
-                        CoinRowView(
-                            coin: coin
-                        )
-                    }
-                    .buttonStyle(.plain)
+                    viewModel.filter(
+                        with: suggestion.name
+                    )
                 }
             }
-        }
-        .navigationTitle("Market")
-        .searchable(
-            text: $viewModel.searchText
         )
-        .refreshable {
-            await viewModel.refresh()
+        .navigationTitle("Market")
+        .onChange(
+            of: searchViewModel.searchText
+        ) { _, newValue in
+
+            viewModel.filter(
+                with: newValue
+            )
         }
         .task {
 
+            await searchViewModel.loadRecentSearches()
+
             if case .idle = viewModel.state {
+
                 await viewModel.loadMarkets()
             }
         }

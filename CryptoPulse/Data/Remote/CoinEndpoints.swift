@@ -122,4 +122,22 @@ enum CoinEndpoints {
             headers: [:]
         )
     }
+    
+    static func search(
+        query: String
+    ) -> Endpoint<SearchResponseDTO> {
+
+        Endpoint(
+
+            path: "search",
+
+            queryItems: [
+
+                URLQueryItem(
+                    name: "query",
+                    value: query
+                )
+            ]
+        )
+    }
 }

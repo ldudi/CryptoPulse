@@ -9,8 +9,6 @@ final class MarketViewModel {
 
     private(set) var state: MarketViewState = .idle
 
-    var searchText = ""
-
     // MARK: - Dependencies
 
     private let getMarketCoins: GetMarketCoinsUseCase
@@ -18,6 +16,8 @@ final class MarketViewModel {
     // MARK: - Cache
 
     private var coins: [Coin] = []
+
+    private var filteredCoinsStorage: [Coin] = []
 
     // MARK: - Initializer
 
@@ -42,6 +42,7 @@ final class MarketViewModel {
             )
 
             coins = markets
+            filteredCoinsStorage = markets
 
             state = markets.isEmpty
                 ? .empty
@@ -60,20 +61,23 @@ final class MarketViewModel {
 
     // MARK: - Search
 
-    var filteredCoins: [Coin] {
+    func filter(
+        with query: String
+    ) {
 
-        guard !searchText.isEmpty else {
+        guard !query.isEmpty else {
 
-            return coins
+            filteredCoinsStorage = coins
+            return
         }
 
-        let query = searchText.lowercased()
+        let lowercased = query.lowercased()
 
-        return coins.filter {
+        filteredCoinsStorage = coins.filter {
 
-            $0.name.lowercased().contains(query)
+            $0.name.lowercased().contains(lowercased)
             ||
-            $0.symbol.lowercased().contains(query)
+            $0.symbol.lowercased().contains(lowercased)
         }
     }
 
@@ -81,18 +85,17 @@ final class MarketViewModel {
 
     var displayedCoins: [Coin] {
 
-        filteredCoins
+        filteredCoinsStorage
     }
 
     var coinsCount: Int {
 
-        displayedCoins.count
+        filteredCoinsStorage.count
     }
 
     var isLoading: Bool {
 
         if case .loading = state {
-
             return true
         }
 
@@ -102,7 +105,6 @@ final class MarketViewModel {
     var error: Error? {
 
         if case .failed(let error) = state {
-
             return error
         }
 
@@ -111,6 +113,6 @@ final class MarketViewModel {
 
     var hasContent: Bool {
 
-        !displayedCoins.isEmpty
+        !filteredCoinsStorage.isEmpty
     }
 }

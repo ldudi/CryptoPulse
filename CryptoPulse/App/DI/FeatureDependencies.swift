@@ -18,6 +18,15 @@ struct FeatureDependencies {
         )
     }
 
+    func makeSearchViewModel() -> SearchViewModel {
+
+        SearchViewModel(
+            getSuggestions: appDependencies.getSearchSuggestionsUseCase,
+            getRecentSearches: appDependencies.getRecentSearchesUseCase,
+            saveRecentSearch: appDependencies.saveRecentSearchUseCase
+        )
+    }
+
     func makeCoinDetailViewModel(
         coinID: String
     ) -> CoinDetailViewModel {

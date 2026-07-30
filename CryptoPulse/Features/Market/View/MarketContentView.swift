@@ -4,12 +4,6 @@
 //
 //  Created by Labhesh Dudi on 17/07/26.
 //
-//
-//import Foundation
-//
-//  MarketContentView.swift
-//  CryptoPulse
-//
 
 import SwiftUI
 
@@ -18,7 +12,11 @@ struct MarketContentView: View {
     @Bindable
     var viewModel: MarketViewModel
 
+    @Bindable
+    var searchViewModel: SearchViewModel
+
     let onSelectCoin: (Coin) -> Void
+    let onSelectSuggestion: (SearchSuggestion) -> Void
 
     var body: some View {
 
@@ -68,9 +66,19 @@ struct MarketContentView: View {
                         )
 
                         SearchBar(
-                            text: $viewModel.searchText,
+                            text: $searchViewModel.searchText,
                             placeholder: "Search coins"
                         )
+
+                        if searchViewModel.shouldShowOverlay {
+
+                            SearchOverlayView(
+                                viewModel: searchViewModel,
+                                onSelect: onSelectSuggestion
+                            )
+                            .transition(.opacity)
+                            .zIndex(1)
+                        }
 
                         CoinList(
                             coins: viewModel.displayedCoins,
